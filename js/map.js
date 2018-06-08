@@ -11,7 +11,7 @@ var amoundAd = titleArr.length;
 var createWayAvatar = function (amound) {
   var arrWayAvatar = [];
   for (var i = 1; i <= amound; i++) {
-    var wayAvatar = 'img/avatars/user{{0' + i + '}}.png';
+    var wayAvatar = 'img/avatars/user0' + i + '.png';
     arrWayAvatar[i] = wayAvatar;
   }
   return arrWayAvatar;
@@ -47,7 +47,6 @@ var randomSortsArr = function (arr) {
 var listAdvert = [];
 for (var i = 0; i < amoundAd; i++) {
 
-
   var locationX = selectRandomNumber(300, 900);
   var locationY = selectRandomNumber(130, 630);
 
@@ -57,7 +56,7 @@ for (var i = 0; i < amoundAd; i++) {
     },
     offer: {
       title: selectTitle(titleArr),
-      address: '{{' + locationX + '}}, {{' + locationY + '}}',
+      address: locationX + ', ' + locationY,
       price: selectRandomNumber(1000, 1000000),
       type: selectItemArr(typeArr),
       rooms: selectRandomNumber(1, 5),
@@ -75,7 +74,27 @@ for (var i = 0; i < amoundAd; i++) {
   }
   listAdvert[i] = advert;
 }
-console.log(listAdvert);
+
+var mapVisible = document.querySelector('.map');
+mapVisible.classList.remove('map--faded');
+
+var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+var fragment = document.createDocumentFragment ();
+for (var i = 0; i < amoundAd; i++) {
+  var pinElement = mapPinTemplate.cloneNode(true);
+  var imagePinElement = pinElement.querySelector('img');
+  pinElement.style = 'left: ' + (listAdvert[i].location.x + imagePinElement.width / 2) + 'px; top: '+ (listAdvert[i].location.y + imagePinElement.height) + 'px;';
+  imagePinElement.src = listAdvert[i].author.avatar;
+  imagePinElement.alt = 'заголовок объявления';
+  fragment.appendChild(pinElement);
+}
+
+var mapPins = document.querySelector('.map__pins');
+mapPins.appendChild(fragment);
+
+
+
+
 
 
 
