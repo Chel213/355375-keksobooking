@@ -116,9 +116,11 @@ popupAdvert.querySelector('.popup__title').textContent = listAdvert[0].offer.tit
 //  меняем адрес
 popupAdvert.querySelector('.popup__text--address').textContent = listAdvert[0].offer.address;
 
-//  меняем цену (как правильно вставить?)
+//  меняем цену
 var priceCard = popupAdvert.querySelector('.popup__text--price');
-priceCard.innerHTML = listAdvert[0].offer.price + '&#x20bd;<span>/ночь</span>';
+var textPrice = priceCard.querySelector('span');
+priceCard.textContent = listAdvert[0].offer.price + '\u20BD';
+priceCard.appendChild(textPrice);
 
 //  тип жилья
 var typeCard = popupAdvert.querySelector('.popup__type');
