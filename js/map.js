@@ -8,7 +8,7 @@ var featuresArr = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'condi
 var photosArr = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var amoundAd = titleArr.length;
 
-//аватар пользователя
+//  аватар пользователя
 var createWayAvatar = function (amound) {
   var arrWayAvatar = [];
   for (var i = 1; i <= amound; i++) {
@@ -18,7 +18,7 @@ var createWayAvatar = function (amound) {
   return arrWayAvatar;
 };
 
-//заголовок объявления
+//  заголовок объявления
 var selectTitle = function (titleList) {
   var indexTitle = Math.floor(Math.random() * titleList.length);
   var selectedTitle = titleList[indexTitle];
@@ -26,18 +26,18 @@ var selectTitle = function (titleList) {
   return selectedTitle;
 };
 
-//функция случайного выбора числа от .. до..
+//  функция случайного выбора числа от .. до..
 var selectRandomNumber = function (numberFrom, numberTo) {
   return numberFrom + Math.floor(Math.random() * (numberTo - numberFrom + 1));
-}
+};
 
-//функция случайного выбора элемента из массива
+//  функция случайного выбора элемента из массива
 var selectItemArr = function (arr) {
   var i = Math.floor(Math.random() * arr.length);
   return arr[i];
-}
+};
 
-//функция случайной сортировки массива
+//  функция случайной сортировки массива
 var randomSortsArr = function (arr) {
   var assortedArr = [];
   var tempArr = arr.slice();
@@ -49,7 +49,7 @@ var randomSortsArr = function (arr) {
   return assortedArr;
 };
 
-//массив предложений
+//  массив предложений
 var listAdvert = [];
 for (var i = 0; i < amoundAd; i++) {
 
@@ -57,7 +57,7 @@ for (var i = 0; i < amoundAd; i++) {
   var locationX = selectRandomNumber(300, 900);
   var locationY = selectRandomNumber(130, 630);
 
-//предложение
+  //  предложение
   var advert = {
     author: {
       avatar: createWayAvatar(amoundAd)[i + 1]
@@ -71,7 +71,7 @@ for (var i = 0; i < amoundAd; i++) {
       guests: selectRandomNumber(1, 100),
       checkin: selectItemArr(checkinArr),
       checkout: selectItemArr(checkoutArr),
-      features: featuresArr.slice(0, Math.floor(Math.random() * featuresArr.length +1)),
+      features: featuresArr.slice(0, Math.floor(Math.random() * featuresArr.length + 1)),
       description: '',
       photos: randomSortsArr(photosArr)
     },
@@ -79,48 +79,48 @@ for (var i = 0; i < amoundAd; i++) {
       x: locationX,
       y: locationY
     }
-  }
+  };
   listAdvert[i] = advert;
 }
 
-//переключаем карту в активный режим
+//  переключаем карту в активный режим
 var mapVisible = document.querySelector('.map');
 var mapContainer = mapVisible.querySelector('.map__filters-container');
 mapVisible.classList.remove('map--faded');
 
-//создаем DocumentFragment и клонируем в него метки
+//  создаем DocumentFragment и клонируем в него метки
 var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
-var fragment = document.createDocumentFragment ();
+var fragment = document.createDocumentFragment();
 for (var i = 0; i < amoundAd; i++) {
   var pinElement = mapPinTemplate.cloneNode(true);
   var imagePinElement = pinElement.querySelector('img');
-  pinElement.style = 'left: ' + (listAdvert[i].location.x + imagePinElement.width / 2) + 'px; top: '+ (listAdvert[i].location.y + imagePinElement.height) + 'px;';
+  pinElement.style = 'left: ' + (listAdvert[i].location.x + imagePinElement.width / 2) + 'px; top: ' + (listAdvert[i].location.y + imagePinElement.height) + 'px;';
   imagePinElement.src = listAdvert[i].author.avatar;
   imagePinElement.alt = listAdvert[i].offer.title;
   fragment.appendChild(pinElement);
 }
 
-//вставляем DocumentFragment
+//  вставляем DocumentFragment
 var mapPins = document.querySelector('.map__pins');
 mapPins.appendChild(fragment);
 
-//создаем DOM элемент объявления
+//  создаем DOM элемент объявления
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 
-  //клонируем шаблон
+//  клонируем шаблон
 var popupAdvert = mapCardTemplate.cloneNode(true);
 
-  //меняем заголовок
+//  меняем заголовок
 popupAdvert.querySelector('.popup__title').textContent = listAdvert[0].offer.title;
 
-  //меняем адрес
-  popupAdvert.querySelector('.popup__text--address').textContent = listAdvert[0].offer.address;
+//  меняем адрес
+popupAdvert.querySelector('.popup__text--address').textContent = listAdvert[0].offer.address;
 
-  //меняем цену (как правильно вставить?)
+//  меняем цену (как правильно вставить?)
 var priceCard = popupAdvert.querySelector('.popup__text--price');
 priceCard.innerHTML = listAdvert[0].offer.price + '&#x20bd;<span>/ночь</span>';
 
-  //тип жилья
+//  тип жилья
 var typeCard = popupAdvert.querySelector('.popup__type');
 switch (listAdvert[0].offer.type) {
   case 'flat':
@@ -138,42 +138,34 @@ switch (listAdvert[0].offer.type) {
 }
 typeCard.textContent = temp;
 
-  //количество комнат
+//  количество комнат
 popupAdvert.querySelector('.popup__text--capacity').textContent = listAdvert[0].offer.rooms + ' комнаты для ' + listAdvert[0].offer.guests + ' гостей';
 
-  //время заезда, выезда
+//  время заезда, выезда
 popupAdvert.querySelector('.popup__text--time').textContent = 'Заезд после ' + listAdvert[0].offer.checkin + ', выезд до ' + listAdvert[0].offer.checkout;
 
-  //список удобств
+//  список удобств
 var listFeatures = popupAdvert.querySelector('.popup__features');
-for (var i = 0; i < listAdvert[0].offer.features.length; i ++) {
+for (var i = 0; i < listAdvert[0].offer.features.length; i++) {
   var itemDel = listFeatures.querySelector('li:last-child');
   listFeatures.removeChild(itemDel);
 }
 
-  //описание жилья
+//  описание жилья
 popupAdvert.querySelector('.popup__description').textContent = listAdvert[0].offer.description;
 
-  //фото жилья
+//  фото жилья
 var photosCard = popupAdvert.querySelector('.popup__photos');
 var photoCard = photosCard.removeChild(photosCard.querySelector('img'));
-console.log(photoCard);
+
 for (var i = 0; i < listAdvert[0].offer.photos.length; i++) {
   var itemPhotoCard = photoCard.cloneNode(true);
   itemPhotoCard.src = listAdvert[0].offer.photos[i];
   photosCard.appendChild(itemPhotoCard);
 }
 
-  //меняем аватар
+//  меняем аватар
 var a = popupAdvert.querySelector('.popup__avatar').src = listAdvert[0].author.avatar;
 
-  //вставляем элемент
+//  вставляем элемент
 mapVisible.insertBefore(popupAdvert, mapContainer);
-
-
-
-
-
-
-
-
