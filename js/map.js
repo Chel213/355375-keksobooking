@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var titleArr = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var typeArr = ['palace', 'flat', 'house', 'bungalo'];
@@ -91,12 +91,12 @@ mapVisible.classList.remove('map--faded');
 //  создаем DocumentFragment и клонируем в него метки
 var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < amoundAd; i++) {
+for (var j = 0; j < amoundAd; j++) {
   var pinElement = mapPinTemplate.cloneNode(true);
   var imagePinElement = pinElement.querySelector('img');
-  pinElement.style = 'left: ' + (listAdvert[i].location.x + imagePinElement.width / 2) + 'px; top: ' + (listAdvert[i].location.y + imagePinElement.height) + 'px;';
-  imagePinElement.src = listAdvert[i].author.avatar;
-  imagePinElement.alt = listAdvert[i].offer.title;
+  pinElement.style = 'left: ' + (listAdvert[j].location.x + imagePinElement.width / 2) + 'px; top: ' + (listAdvert[j].location.y + imagePinElement.height) + 'px;';
+  imagePinElement.src = listAdvert[j].author.avatar;
+  imagePinElement.alt = listAdvert[j].offer.title;
   fragment.appendChild(pinElement);
 }
 
@@ -122,18 +122,19 @@ priceCard.innerHTML = listAdvert[0].offer.price + '&#x20bd;<span>/ночь</span
 
 //  тип жилья
 var typeCard = popupAdvert.querySelector('.popup__type');
+var temp;
 switch (listAdvert[0].offer.type) {
   case 'flat':
-    var temp = 'Квартира';
+    temp = 'Квартира';
     break;
   case 'bungalo':
-    var temp = 'Бунгало';
+    temp = 'Бунгало';
     break;
   case 'house':
-    var temp = 'Дом';
+    temp = 'Дом';
     break;
   case 'palace':
-    var temp = 'Дворец';
+    temp = 'Дворец';
     break;
 }
 typeCard.textContent = temp;
@@ -146,7 +147,7 @@ popupAdvert.querySelector('.popup__text--time').textContent = 'Заезд пос
 
 //  список удобств
 var listFeatures = popupAdvert.querySelector('.popup__features');
-for (var i = 0; i < listAdvert[0].offer.features.length; i++) {
+for (var k = 0; k < listAdvert[0].offer.features.length; k++) {
   var itemDel = listFeatures.querySelector('li:last-child');
   listFeatures.removeChild(itemDel);
 }
@@ -158,14 +159,14 @@ popupAdvert.querySelector('.popup__description').textContent = listAdvert[0].off
 var photosCard = popupAdvert.querySelector('.popup__photos');
 var photoCard = photosCard.removeChild(photosCard.querySelector('img'));
 
-for (var i = 0; i < listAdvert[0].offer.photos.length; i++) {
+for (var l = 0; l < listAdvert[0].offer.photos.length; l++) {
   var itemPhotoCard = photoCard.cloneNode(true);
-  itemPhotoCard.src = listAdvert[0].offer.photos[i];
+  itemPhotoCard.src = listAdvert[0].offer.photos[l];
   photosCard.appendChild(itemPhotoCard);
 }
 
 //  меняем аватар
-var a = popupAdvert.querySelector('.popup__avatar').src = listAdvert[0].author.avatar;
+popupAdvert.querySelector('.popup__avatar').src = listAdvert[0].author.avatar;
 
 //  вставляем элемент
 mapVisible.insertBefore(popupAdvert, mapContainer);
