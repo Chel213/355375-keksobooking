@@ -11,23 +11,22 @@ var MAX_ROOMS = 5;
 var MIN_GUESTS = 1;
 var MAX_GUESTS = 100;
 
-var TITLE_LIST = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var TYPE_LIST = ['palace', 'flat', 'house', 'bungalo'];
+var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var REGISTRATION_TIMES = ['12:00', '13:00', '14:00'];
 var CHECKOUT_TIMES = ['12:00', '13:00', '14:00'];
-var FEATURES_LIST = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var PHOTOS_LIST = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var AD_NUMBER = 0;
-var amoundAd = TITLE_LIST.length;
+var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var amoundAd = TITLES.length;
 
 //  аватар пользователя
 var createWayAvatar = function (amound) {
-  var arrWayAvatar = [];
+  var avatars = [];
   for (var i = 1; i <= amound; i++) {
     var wayAvatar = 'img/avatars/user0' + i + '.png';
-    arrWayAvatar[i] = wayAvatar;
+    avatars[i] = wayAvatar;
   }
-  return arrWayAvatar;
+  return avatars;
 };
 
 
@@ -67,27 +66,27 @@ var randomSortsArr = function (arr) {
 
 //  функция выбора типа жилья
 var selectsType = function (type) {
-  var temp;
+  var displayTitle;
   switch (type) {
     case 'flat':
-      temp = 'Квартира';
+      displayTitle = 'Квартира';
       break;
     case 'bungalo':
-      temp = 'Бунгало';
+      displayTitle = 'Бунгало';
       break;
     case 'house':
-      temp = 'Дом';
+      displayTitle = 'Дом';
       break;
     case 'palace':
-      temp = 'Дворец';
+      displayTitle = 'Дворец';
       break;
   }
-  return temp;
+  return displayTitle;
 };
 
 //  функция создания списка предложений
 var createListAdvert = function (amound) {
-  var tempListAdvert = [];
+  var listAdverts = [];
   for (var i = 0; i < amound; i++) {
 
     var locationX = selectRandomNumber(MIN_LOCATION_X, MAX_LOCATION_X);
@@ -99,102 +98,102 @@ var createListAdvert = function (amound) {
         avatar: createWayAvatar(amound)[i + 1]
       },
       offer: {
-        title: selectTitle(TITLE_LIST),
+        title: selectTitle(TITLES),
         address: locationX + ', ' + locationY,
         price: selectRandomNumber(MIN_PRICE, MAX_PRICE),
-        type: selectItemArr(TYPE_LIST),
+        type: selectItemArr(TYPES),
         rooms: selectRandomNumber(MIN_ROOMS, MAX_ROOMS),
         guests: selectRandomNumber(MIN_GUESTS, MAX_GUESTS),
         checkin: selectItemArr(REGISTRATION_TIMES),
         checkout: selectItemArr(CHECKOUT_TIMES),
-        features: FEATURES_LIST.slice(0, selectRandomNumber(0, FEATURES_LIST.length)),
+        features: FEATURES.slice(0, selectRandomNumber(0, FEATURES.length)),
         description: '',
-        photos: randomSortsArr(PHOTOS_LIST)
+        photos: randomSortsArr(PHOTOS)
       },
       location: {
         x: locationX,
         y: locationY
       }
     };
-    tempListAdvert[i] = advert;
+    listAdverts[i] = advert;
   }
-  return tempListAdvert;
+  return listAdverts;
 };
 
 //  функция создания Pin
-var createPinElement = function (adNumber, templatePin) {
+var createPinElement = function (itemListAdvert, templatePin) {
   var pinElement = templatePin.cloneNode(true);
   var imagePinElement = pinElement.querySelector('img');
-  pinElement.style = 'left: ' + (listAdvert[adNumber].location.x + imagePinElement.width / 2) + 'px; top: ' + (listAdvert[adNumber].location.y + imagePinElement.height) + 'px;';
-  imagePinElement.src = listAdvert[adNumber].author.avatar;
-  imagePinElement.alt = listAdvert[adNumber].offer.title;
+  pinElement.style = 'left: ' + (itemListAdvert.location.x + imagePinElement.width / 2) + 'px; top: ' + (itemListAdvert.location.y + imagePinElement.height) + 'px;';
+  imagePinElement.src = itemListAdvert.author.avatar;
+  imagePinElement.alt = itemListAdvert.offer.title;
   return pinElement;
 };
 
 //  функция создания всех пинов
-var createListPin = function (amoundPin, templatePin) {
+var createListPin = function (listAdvert, templatePin) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < amoundPin; i++) {
-    var pinElement = createPinElement(i, templatePin);
+  for (var i = 0; i < listAdvert.length; i++) {
+    var pinElement = createPinElement(listAdvert[i], templatePin);
     fragment.appendChild(pinElement);
   }
   return fragment;
 };
 
 //  функция карточки объявления
-var createsAd = function (adNumber, templateAd) {
+var createAd = function (listAdvert, templateAd) {
   //  клонируем шаблон
   var popupAdvert = templateAd.cloneNode(true);
 
   //  заголовок
-  popupAdvert.querySelector('.popup__title').textContent = listAdvert[adNumber].offer.title;
+  popupAdvert.querySelector('.popup__title').textContent = listAdvert.offer.title;
 
   //  адрес
-  popupAdvert.querySelector('.popup__text--address').textContent = listAdvert[adNumber].offer.address;
+  popupAdvert.querySelector('.popup__text--address').textContent = listAdvert.offer.address;
 
   //  цена
   var priceCard = popupAdvert.querySelector('.popup__text--price');
   var textPrice = priceCard.querySelector('span');
-  priceCard.textContent = listAdvert[adNumber].offer.price + '\u20BD';
+  priceCard.textContent = listAdvert.offer.price + '\u20BD';
   priceCard.appendChild(textPrice);
 
   //  тип жилья
   var typeCard = popupAdvert.querySelector('.popup__type');
-  typeCard.textContent = selectsType(listAdvert[adNumber].offer.type);
+  typeCard.textContent = selectsType(listAdvert.offer.type);
 
   //  количество комнат
-  popupAdvert.querySelector('.popup__text--capacity').textContent = listAdvert[adNumber].offer.rooms + ' комнаты для ' + listAdvert[adNumber].offer.guests + ' гостей';
+  popupAdvert.querySelector('.popup__text--capacity').textContent = listAdvert.offer.rooms + ' комнаты для ' + listAdvert.offer.guests + ' гостей';
 
   //  время заезда, выезда
-  popupAdvert.querySelector('.popup__text--time').textContent = 'Заезд после ' + listAdvert[adNumber].offer.checkin + ', выезд до ' + listAdvert[adNumber].offer.checkout;
+  popupAdvert.querySelector('.popup__text--time').textContent = 'Заезд после ' + listAdvert.offer.checkin + ', выезд до ' + listAdvert.offer.checkout;
 
   //  список удобств
   var listFeatures = popupAdvert.querySelector('.popup__features');
-  for (var k = 0; k < listAdvert[adNumber].offer.features.length; k++) {
+  for (var i = 0; i < listAdvert.offer.features.length; i++) {
     var itemDel = listFeatures.querySelector('li:last-child');
     listFeatures.removeChild(itemDel);
   }
 
   //  описание жилья
-  popupAdvert.querySelector('.popup__description').textContent = listAdvert[adNumber].offer.description;
+  popupAdvert.querySelector('.popup__description').textContent = listAdvert.offer.description;
 
   //  фото жилья
   var photosCard = popupAdvert.querySelector('.popup__photos');
   var photoCard = photosCard.removeChild(photosCard.querySelector('img'));
 
-  for (var l = 0; l < listAdvert[adNumber].offer.photos.length; l++) {
+  for (var j = 0; j < listAdvert.offer.photos.length; j++) {
     var itemPhotoCard = photoCard.cloneNode(true);
-    itemPhotoCard.src = listAdvert[adNumber].offer.photos[l];
+    itemPhotoCard.src = listAdvert.offer.photos[j];
     photosCard.appendChild(itemPhotoCard);
   }
 
   //  аватар
-  popupAdvert.querySelector('.popup__avatar').src = listAdvert[adNumber].author.avatar;
+  popupAdvert.querySelector('.popup__avatar').src = listAdvert.author.avatar;
   return popupAdvert;
 };
 
 //  генерим список предложений
-var listAdvert = createListAdvert(amoundAd);
+var listAdverts = createListAdvert(amoundAd);
 
 //  переключаем карту в активный режим
 var mapVisible = document.querySelector('.map');
@@ -204,8 +203,8 @@ mapVisible.classList.remove('map--faded');
 //  ищем шаблон и вставляем пины на карту
 var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
-mapPins.appendChild(createListPin(amoundAd, mapPinTemplate));
+mapPins.appendChild(createListPin(listAdverts, mapPinTemplate));
 
-//  ищем шаблон и вставляем элемент
+//  ищем шаблон и вставляем картоку для первого эл-та
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
-mapVisible.insertBefore(createsAd(AD_NUMBER, mapCardTemplate), mapContainer);
+mapVisible.insertBefore(createAd(listAdverts[0], mapCardTemplate), mapContainer);
