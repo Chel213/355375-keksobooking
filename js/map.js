@@ -10,6 +10,7 @@ var MIN_ROOMS = 1;
 var MAX_ROOMS = 5;
 var MIN_GUESTS = 1;
 var MAX_GUESTS = 100;
+var KEY_CODE_ENTER = 13;
 
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -214,9 +215,8 @@ var determinesCoordinatesBottom = function (item) {
   return coordinates;
 };
 
-//  обработчик активации страницы
-var pinActivateMouseupHandler = function () {
   //  переводим страницу в активный режим
+var activatePage = function () {
   var mapVisible = document.querySelector('.map');
   mapVisible.classList.remove('map--faded');
 
@@ -238,6 +238,18 @@ var pinActivateMouseupHandler = function () {
   renderPage(listAdverts);
 };
 
+//  обработчик активации страницы по клику
+var pinActivateMouseupHandler = function () {
+  activatePage();
+};
+
+//  обработчик активации страницы по enter
+var pinActivateKeydownHandler = function (evt) {
+  if (evt.keyCode === KEY_CODE_ENTER) {
+    activatePage();
+  }
+};
+
 // делаем поля формы не активными
 var fieldForm = document.querySelectorAll('.ad-form fieldset');
 fieldForm.forEach(function (item) {
@@ -252,10 +264,12 @@ placeholderAddress.setAttribute('placeholder', pinActivateCoordinates.x + ', ' +
 
 //  навешиваем обработчик активации страницы
 pinActivate.addEventListener('mouseup', pinActivateMouseupHandler);
+pinActivate.addEventListener('keydown', pinActivateKeydownHandler);
 
 //  отрисовка объявлений активной страницы
 var renderPage = function (listAdvert) {
   pinActivate.removeEventListener('mouseup', pinActivateMouseupHandler);
+  pinActivate.removeEventListener('keydown', pinActivateKeydownHandler);
   //  ищем шаблон и вставляем пины на карту
   var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var mapPins = document.querySelector('.map__pins');
