@@ -239,12 +239,12 @@ var activatePage = function () {
 };
 
 //  обработчик активации страницы по клику
-var pinActivateMouseupHandler = function () {
+var onPinActivateMouseup = function () {
   activatePage();
 };
 
 //  обработчик активации страницы по enter
-var pinActivateKeydownHandler = function (evt) {
+var onPinActivateKeydown = function (evt) {
   if (evt.keyCode === KEY_CODE_ENTER) {
     activatePage();
   }
@@ -263,13 +263,13 @@ var placeholderAddress = document.querySelector('#address');
 placeholderAddress.setAttribute('placeholder', pinActivateCoordinates.x + ', ' + pinActivateCoordinates.y);
 
 //  навешиваем обработчик активации страницы
-pinActivate.addEventListener('mouseup', pinActivateMouseupHandler);
-pinActivate.addEventListener('keydown', pinActivateKeydownHandler);
+pinActivate.addEventListener('mouseup', onPinActivateMouseup);
+pinActivate.addEventListener('keydown', onPinActivateKeydown);
 
 //  отрисовка объявлений активной страницы
 var renderPage = function (listAdvert) {
-  pinActivate.removeEventListener('mouseup', pinActivateMouseupHandler);
-  pinActivate.removeEventListener('keydown', pinActivateKeydownHandler);
+  pinActivate.removeEventListener('mouseup', onPinActivateMouseup);
+  pinActivate.removeEventListener('keydown', onPinActivateKeydown);
   //  ищем шаблон и вставляем пины на карту
   var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var mapPins = document.querySelector('.map__pins');
