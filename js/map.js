@@ -135,8 +135,8 @@ var createPinElement = function (itemListAdvert, templatePin) {
 //  функция создания всех пинов
 var createListPin = function (listAdvert, templatePin) {
   var fragment = document.createDocumentFragment();
-  listAdvert.forEach(function (item, i) {
-    var pinElement = createPinElement(listAdvert[i], templatePin);
+  listAdvert.forEach(function (item) {
+    var pinElement = createPinElement(item, templatePin);
     fragment.appendChild(pinElement);
   });
   return fragment;
@@ -275,20 +275,15 @@ var renderPage = function (listAdvert) {
   var mapPins = document.querySelector('.map__pins');
   mapPins.appendChild(createListPin(listAdvert, mapPinTemplate));
 
-  //  точный поиск по селектору
-  var mapPin = document.querySelectorAll('.map__pin');
-  var listPins = [];
-  mapPin.forEach(function (item) {
-    if (item.className === 'map__pin') {
-      listPins.push(item);
-    }
-  });
+
+
 
 
   //  ищем шаблон
   var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
   var mapVisible = document.querySelector('.map');
   var mapContainer = mapVisible.querySelector('.map__filters-container');
+  var listPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
   //  и вставляем карточки элементов при клике на новую удаляем если была предыдущую
   listPins.forEach(function (item, i) {
