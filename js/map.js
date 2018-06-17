@@ -135,8 +135,9 @@ var createPinElement = function (itemListAdvert, templatePin) {
 //  функция создания всех пинов
 var createListPin = function (listAdvert, templatePin) {
   var fragment = document.createDocumentFragment();
-  listAdvert.forEach(function (item) {
+  listAdvert.forEach(function (item, i) {
     var pinElement = createPinElement(item, templatePin);
+    pinElement.setAttribute('data-order', i);
     fragment.appendChild(pinElement);
   });
   return fragment;
@@ -275,33 +276,34 @@ var renderPage = function (listAdvert) {
   var mapPins = document.querySelector('.map__pins');
   mapPins.appendChild(createListPin(listAdvert, mapPinTemplate));
 
-
-
-
-
   //  ищем шаблон
   var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
   var mapVisible = document.querySelector('.map');
   var mapContainer = mapVisible.querySelector('.map__filters-container');
-  var listPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-  //  и вставляем карточки элементов при клике на новую удаляем если была предыдущую
-  listPins.forEach(function (item, i) {
-    item.addEventListener('click', function () {
-      var mapCard = mapVisible.querySelector('.map__card');
-      if (mapCard) {
-        mapCard.remove();
-      }
-      mapVisible.insertBefore(createAd(listAdvert[i], mapCardTemplate), mapContainer);
-      //  навешиваем обработчик на закрытие
-      var card = mapVisible.querySelector('.map__card');
-      var cardClose = card.querySelector('.popup__close');
-      if (cardClose) {
-        cardClose.addEventListener('click', function () {
-          card.remove();
-        });
-      }
-    });
+  mapVisible.addEventListener('click', function (evt) {
+    var pin = evt.target;
+    while (pin.className !== 'map__pin' && pin.className !== evt.currentTarget.className && pin.className !== 'popup__close') {
+      pin = pin.parentNode;
+    }
+    if (pin.className !== 'map__pin') {
+      return;
+    }
+    var pinOrder = pin.getAttribute('data-order');
+    var mapCard = mapVisible.querySelector('.map__card');
+    if (mapCard) {
+      mapCard.remove();
+    }
+    mapVisible.insertBefore(createAd(listAdvert[pinOrder], mapCardTemplate), mapContainer);
+    //  навешиваем обработчик на закрытие
+    var card = mapVisible.querySelector('.map__card');
+    var cardClose = card.querySelector('.popup__close');
+    if (cardClose) {
+      cardClose.addEventListener('click', function () {
+        card.remove();
+      });
+    }
+
   });
 };
 
