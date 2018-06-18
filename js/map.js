@@ -11,6 +11,7 @@ var MAX_ROOMS = 5;
 var MIN_GUESTS = 1;
 var MAX_GUESTS = 100;
 var KEY_CODE_ENTER = 13;
+var KEY_CODE_ESC = 27;
 
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -267,6 +268,14 @@ placeholderAddress.setAttribute('placeholder', pinActivateCoordinates.x + ', ' +
 pinActivate.addEventListener('mouseup', onPinActivateMouseup);
 pinActivate.addEventListener('keydown', onPinActivateKeydown);
 
+var onCardKeydown = function (evt) {
+  var card = document.querySelector('.map__card');
+  if (evt.keyCode === KEY_CODE_ESC) {
+    card.remove();
+    document.removeEventListener('keydown', onCardKeydown);
+  }
+};
+
 //  отрисовка объявлений активной страницы
 var renderPage = function (listAdvert) {
   pinActivate.removeEventListener('mouseup', onPinActivateMouseup);
@@ -303,8 +312,9 @@ var renderPage = function (listAdvert) {
         card.remove();
       });
     }
-
+    if (card) {
+      document.addEventListener('keydown', onCardKeydown);
+    }
   });
 };
-
 
