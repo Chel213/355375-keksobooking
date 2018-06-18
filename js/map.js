@@ -290,15 +290,15 @@ var renderPage = function (listAdvert) {
   var mapVisible = document.querySelector('.map');
   var mapContainer = mapVisible.querySelector('.map__filters-container');
 
-  mapVisible.addEventListener('click', function (evt) {
+  mapPins.addEventListener('click', function (evt) {
     var pin = evt.target;
-    while (pin.className !== 'map__pin' && pin.className !== evt.currentTarget.className && pin.className !== 'popup__close') {
+    while (!pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main') && pin !== evt.currentTarget) {
       pin = pin.parentNode;
     }
     if (pin.className !== 'map__pin') {
       return;
     }
-    var pinOrder = pin.getAttribute('data-order');
+    var pinOrder = pin.dataset.order;
     var mapCard = mapVisible.querySelector('.map__card');
     if (mapCard) {
       mapCard.remove();
