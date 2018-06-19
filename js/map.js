@@ -231,10 +231,11 @@ var activatePage = function () {
   });
 
   //  адрес на момент клика
-  var placeholderAddress = adInformation.querySelector('#address');
+  var inputAddress = adInformation.querySelector('#address');
   var pinActivate = document.querySelector('.map__pin--main');
   var pinCoordinates = determinesCoordinatesBottom(pinActivate);
-  placeholderAddress.setAttribute('placeholder', pinCoordinates.x + ', ' + pinCoordinates.y);
+  inputAddress.value = pinCoordinates.x + ', ' + pinCoordinates.y;
+  inputAddress.setAttribute('disabled', true);
 
   //   отрисовка страницы
   renderPage(listAdverts);
@@ -317,4 +318,83 @@ var renderPage = function (listAdvert) {
     }
   });
 };
+
+var adForm = document.querySelector('.ad-form');
+var adType = adForm.querySelector('#type');
+var adPrice = adForm.querySelector('#price');
+var adTimeIn = adForm.querySelector('#timein');
+var adTimeOut = adForm.querySelector('#timeout');
+var adFormTime = adForm.querySelector('.ad-form__element--time');
+var adRoomNumber = adForm.querySelector('#room_number');
+var adCapacity = adForm.querySelector('#capacity');
+
+var returnsSelectedItem = function (select) {
+  for (var i = 0; i < select.options.length; i++) {
+    var option = select.options[i];
+    if (option.selected) {
+      var selectItem = select.options[i];
+    }
+  }
+  return selectItem.value;
+};
+
+var synchronizationForm = function (formIn, formTo) {
+  var timeFrom = returnsSelectedItem(formIn);
+  for (var i = 0; i < formTo.options.length; i++) {
+    var timeTo = formTo.options[i].value;
+    if (formTo.options[i].selected) {
+      formTo.selectedIndex = -1;
+    }
+    if (timeFrom === timeTo) {
+      formTo.selectedIndex = i;
+    }
+  }
+};
+
+adType.addEventListener('change', function () {
+  var type = returnsSelectedItem(adType);
+  var price;
+  switch (type) {
+    case 'palace':
+      price = 10000;
+      break;
+    case 'flat':
+      price = 1000;
+      break;
+    case 'house':
+      price = 5000;
+      break;
+    case 'bungalo':
+      price = 0;
+      break;
+  }
+  adPrice.placeholder = price;
+  adPrice.min = price;
+});
+
+
+adFormTime.addEventListener('change', function (evt) {
+  if (evt.target.name === 'timein') {
+    synchronizationForm(adTimeIn, adTimeOut);
+  }
+  if (evt.target.name === 'timeout') {
+    synchronizationForm(adTimeOut, adTimeIn);
+  }
+});
+
+adRoomNumber.addEventListener('change', function () {
+  var roomNum = returnsSelectedItem(adRoomNumber);
+  var minCapacity = adCapacity.options.length - 1;
+  var maxRooms = adRoomNumber.options.length - 1;
+  for (var i = 0; i < adCapacity.options.length; i++) {
+    adCapacity.options[i].setAttribute('disabled', true);
+    if (roomNum >= adCapacity.options[i].value && adCapacity.options[i].value !== adCapacity.options[minCapacity].value && roomNum !== adRoomNumber.options[maxRooms].value) {
+      adCapacity.options[i].removeAttribute('disabled');
+      adCapacity.selectedIndex = adCapacity.options.length - 2;
+    } else if (roomNum === adRoomNumber.options[maxRooms].value) {
+      adCapacity.options[minCapacity].removeAttribute('disabled');
+      adCapacity.selectedIndex = minCapacity;
+    }
+  }
+});
 
