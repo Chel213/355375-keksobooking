@@ -12,6 +12,12 @@ var MIN_GUESTS = 1;
 var MAX_GUESTS = 100;
 var KEY_CODE_ENTER = 13;
 var KEY_CODE_ESC = 27;
+var PRICE_TYPE = {
+  palace: 10000,
+  flat: 1000,
+  house: 5000,
+  bungalo: 0
+};
 
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -203,8 +209,8 @@ var listAdverts = createListAdvert(amoundAd);
 var determinesCoordinatesCenter = function (item) {
   var coordinates = {};
   var elementProperties = item.getBoundingClientRect();
-  coordinates.x = elementProperties.x + elementProperties.width / 2;
-  coordinates.y = elementProperties.y + pageYOffset + elementProperties.height / 2;
+  coordinates.x = item.offsetLeft + elementProperties.width / 2;
+  coordinates.y = item.offsetTop + pageYOffset + elementProperties.height / 2;
   return coordinates;
 };
 
@@ -212,8 +218,8 @@ var determinesCoordinatesCenter = function (item) {
 var determinesCoordinatesBottom = function (item) {
   var coordinates = {};
   var elementProperties = item.getBoundingClientRect();
-  coordinates.x = elementProperties.x + elementProperties.width / 2;
-  coordinates.y = elementProperties.bottom + pageYOffset + HEIGHT_PIN_POINTER;
+  coordinates.x = item.offsetLeft + elementProperties.width / 2;
+  coordinates.y = item.offsetTop + pageYOffset + HEIGHT_PIN_POINTER + elementProperties.height;
   return coordinates;
 };
 
@@ -230,7 +236,7 @@ var activatePage = function () {
     item.removeAttribute('disabled');
   });
 
-  //  адрес на момент клика
+  //  адрес на момент нажатия
   var inputAddress = adInformation.querySelector('#address');
   var pinActivate = document.querySelector('.map__pin--main');
   var pinCoordinates = determinesCoordinatesBottom(pinActivate);
@@ -241,10 +247,11 @@ var activatePage = function () {
   renderPage(listAdverts);
 };
 
-//  обработчик активации страницы по клику
+//  обработчик активации страницы по mouseOup
 var onPinActivateMouseup = function () {
   activatePage();
 };
+
 
 //  обработчик активации страницы по enter
 var onPinActivateKeydown = function (evt) {
@@ -328,18 +335,9 @@ var adFormTime = adForm.querySelector('.ad-form__element--time');
 var adRoomNumber = adForm.querySelector('#room_number');
 var adCapacity = adForm.querySelector('#capacity');
 
-var returnsSelectedItem = function (select) {
-  for (var i = 0; i < select.options.length; i++) {
-    var option = select.options[i];
-    if (option.selected) {
-      var selectItem = select.options[i];
-    }
-  }
-  return selectItem.value;
-};
 
 var synchronizationForm = function (formIn, formTo) {
-  var timeFrom = returnsSelectedItem(formIn);
+  var timeFrom = formIn.value;
   for (var i = 0; i < formTo.options.length; i++) {
     var timeTo = formTo.options[i].value;
     if (formTo.options[i].selected) {
@@ -352,20 +350,20 @@ var synchronizationForm = function (formIn, formTo) {
 };
 
 adType.addEventListener('change', function () {
-  var type = returnsSelectedItem(adType);
+  var type = adType.value;
   var price;
   switch (type) {
     case 'palace':
-      price = 10000;
+      price = PRICE_TYPE.palace;
       break;
     case 'flat':
-      price = 1000;
+      price = PRICE_TYPE.flat;
       break;
     case 'house':
-      price = 5000;
+      price = PRICE_TYPE.house;
       break;
     case 'bungalo':
-      price = 0;
+      price = PRICE_TYPE.bungalo;
       break;
   }
   adPrice.placeholder = price;
@@ -383,17 +381,22 @@ adFormTime.addEventListener('change', function (evt) {
 });
 
 adRoomNumber.addEventListener('change', function () {
-  var roomNum = returnsSelectedItem(adRoomNumber);
-  var minCapacity = adCapacity.options.length - 1;
-  var maxRooms = adRoomNumber.options.length - 1;
+  var MIN_CAPACITY = '0';
+  var MAX_ROOM = '100';
+  var roomNum = adRoomNumber.value;
+  var defoltCapacity = adCapacity.options.length - 2;
+  var noGuests = adCapacity.options.length - 1;
+
   for (var i = 0; i < adCapacity.options.length; i++) {
     adCapacity.options[i].setAttribute('disabled', true);
-    if (roomNum >= adCapacity.options[i].value && adCapacity.options[i].value !== adCapacity.options[minCapacity].value && roomNum !== adRoomNumber.options[maxRooms].value) {
+    var capacityValue = adCapacity.options[i].value;
+
+    if (roomNum >= capacityValue && capacityValue !== MIN_CAPACITY && roomNum !== MAX_ROOM) {
       adCapacity.options[i].removeAttribute('disabled');
-      adCapacity.selectedIndex = adCapacity.options.length - 2;
-    } else if (roomNum === adRoomNumber.options[maxRooms].value) {
-      adCapacity.options[minCapacity].removeAttribute('disabled');
-      adCapacity.selectedIndex = minCapacity;
+      adCapacity.selectedIndex = defoltCapacity;
+    } else if (roomNum === MAX_ROOM) {
+      adCapacity.options[noGuests].removeAttribute('disabled');
+      adCapacity.selectedIndex = noGuests;
     }
   }
 });
