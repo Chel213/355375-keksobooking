@@ -18,6 +18,12 @@ var PRICE_TYPE = {
   house: 5000,
   bungalo: 0
 };
+var ROOM_CAPACITY = {
+  '1': [1],
+  '2': [1, 2],
+  '3': [1, 2, 3],
+  '100': [0]
+};
 
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -206,11 +212,11 @@ var createAd = function (listAdvert, templateAd) {
 var listAdverts = createListAdvert(amoundAd);
 
 //  функция определения координат центра
-var determinesCoordinatesCenter = function (item) {
+var determinesCoordinatesCenter = function (element) {
   var coordinates = {};
-  var elementProperties = item.getBoundingClientRect();
-  coordinates.x = item.offsetLeft + elementProperties.width / 2;
-  coordinates.y = item.offsetTop + pageYOffset + elementProperties.height / 2;
+  var elementProperties = element.getBoundingClientRect();
+  coordinates.x = element.offsetLeft + elementProperties.width / 2;
+  coordinates.y = element.offsetTop + pageYOffset + elementProperties.height / 2;
   return coordinates;
 };
 
@@ -351,23 +357,8 @@ var synchronizationForm = function (formIn, formTo) {
 
 adType.addEventListener('change', function () {
   var type = adType.value;
-  var price;
-  switch (type) {
-    case 'palace':
-      price = PRICE_TYPE.palace;
-      break;
-    case 'flat':
-      price = PRICE_TYPE.flat;
-      break;
-    case 'house':
-      price = PRICE_TYPE.house;
-      break;
-    case 'bungalo':
-      price = PRICE_TYPE.bungalo;
-      break;
-  }
-  adPrice.placeholder = price;
-  adPrice.min = price;
+  adPrice.placeholder = PRICE_TYPE[type];
+  adPrice.min = PRICE_TYPE[type];
 });
 
 
@@ -381,23 +372,16 @@ adFormTime.addEventListener('change', function (evt) {
 });
 
 adRoomNumber.addEventListener('change', function () {
-  var MIN_CAPACITY = '0';
-  var MAX_ROOM = '100';
   var roomNum = adRoomNumber.value;
-  var defoltCapacity = adCapacity.options.length - 2;
-  var noGuests = adCapacity.options.length - 1;
 
-  for (var i = 0; i < adCapacity.options.length; i++) {
+  for (var i = 0; i < adCapacity.length; i++) {
+    var capacity = adCapacity.options[i].value;
     adCapacity.options[i].setAttribute('disabled', true);
-    var capacityValue = adCapacity.options[i].value;
-
-    if (roomNum >= capacityValue && capacityValue !== MIN_CAPACITY && roomNum !== MAX_ROOM) {
-      adCapacity.options[i].removeAttribute('disabled');
-      adCapacity.selectedIndex = defoltCapacity;
-    } else if (roomNum === MAX_ROOM) {
-      adCapacity.options[noGuests].removeAttribute('disabled');
-      adCapacity.selectedIndex = noGuests;
-    }
+    ROOM_CAPACITY[roomNum].forEach(function (item) {
+      if (+capacity === item) {
+        adCapacity.options[i].removeAttribute('disabled');
+        adCapacity.selectedIndex = i;
+      }
+    });
   }
 });
-
