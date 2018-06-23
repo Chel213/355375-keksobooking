@@ -221,11 +221,11 @@ var determinesCoordinatesCenter = function (element) {
 };
 
 //  функция определения координат нижнего конца пина
-var determinesCoordinatesBottom = function (item) {
+var determinesCoordinatesBottom = function (element) {
   var coordinates = {};
-  var elementProperties = item.getBoundingClientRect();
-  coordinates.x = item.offsetLeft + elementProperties.width / 2;
-  coordinates.y = item.offsetTop + pageYOffset + HEIGHT_PIN_POINTER + elementProperties.height;
+  var elementProperties = element.getBoundingClientRect();
+  coordinates.x = element.offsetLeft + elementProperties.width / 2;
+  coordinates.y = element.offsetTop + pageYOffset + HEIGHT_PIN_POINTER + elementProperties.height;
   return coordinates;
 };
 
