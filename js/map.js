@@ -214,22 +214,20 @@ var listAdverts = createListAdvert(amoundAd);
 //  функция определения координат центра
 var determinesCoordinatesCenter = function (element) {
   var coordinates = {};
-  var elementProperties = element.getBoundingClientRect();
-  coordinates.x = element.offsetLeft + elementProperties.width / 2;
-  coordinates.y = element.offsetTop + pageYOffset + elementProperties.height / 2;
+  coordinates.x = element.offsetLeft + element.offsetWidth / 2;
+  coordinates.y = element.offsetTop + element.offsetHeight / 2;
   return coordinates;
 };
 
 //  функция определения координат нижнего конца пина
 var determinesCoordinatesBottom = function (element) {
   var coordinates = {};
-  var elementProperties = element.getBoundingClientRect();
-  coordinates.x = element.offsetLeft + elementProperties.width / 2;
-  coordinates.y = element.offsetTop + pageYOffset + HEIGHT_PIN_POINTER + elementProperties.height;
+  coordinates.x = element.offsetLeft + element.offsetWidth / 2;
+  coordinates.y = element.offsetTop + HEIGHT_PIN_POINTER + element.offsetHeight;
   return coordinates;
 };
 
-  //  переводим страницу в активный режим
+//  переводим страницу в активный режим
 var activatePage = function () {
   var mapVisible = document.querySelector('.map');
   mapVisible.classList.remove('map--faded');
@@ -242,7 +240,7 @@ var activatePage = function () {
     item.removeAttribute('disabled');
   });
 
-  //  адрес на момент нажатия
+  //  адрес на момент mouseUp
   var inputAddress = adInformation.querySelector('#address');
   var pinActivate = document.querySelector('.map__pin--main');
   var pinCoordinates = determinesCoordinatesBottom(pinActivate);
@@ -253,9 +251,51 @@ var activatePage = function () {
   renderPage(listAdverts);
 };
 
-//  обработчик активации страницы по mouseOup
-var onPinActivateMouseup = function () {
-  activatePage();
+var onPinActivateMouseDown = function (evt) {
+  var mapPins = document.querySelector('.map__pins');
+  var pinActivate = mapPins.querySelector('.map__pin--main');
+  var inputAddress = document.querySelector('#address');
+
+
+  var startCoordinats = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  var onPinActivateMouseMove = function (moveEvt) {
+    var shift = {
+      x: startCoordinats.x - moveEvt.clientX,
+      y: startCoordinats.y - moveEvt.clientY
+    };
+    startCoordinats = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    var currentCoordinats = {
+      x: pinActivate.offsetLeft - shift.x,
+      y: pinActivate.offsetTop - shift.y
+    };
+
+    if (currentCoordinats.y >= 0 && currentCoordinats.y + pinActivate.offsetHeight + HEIGHT_PIN_POINTER <= mapPins.offsetHeight) {
+      pinActivate.style.top = (pinActivate.offsetTop - shift.y) + 'px';
+    }
+    if (currentCoordinats.x >= 0 && currentCoordinats.x + pinActivate.offsetWidth <= mapPins.offsetWidth) {
+      pinActivate.style.left = (pinActivate.offsetLeft - shift.x) + 'px';
+    }
+
+    //  изменение координат онлайн
+    var pinCoordinates = determinesCoordinatesBottom(pinActivate);
+    inputAddress.value = pinCoordinates.x + ', ' + pinCoordinates.y;
+  };
+
+  var onPinActivateMouseup = function () {
+    activatePage();
+    document.removeEventListener('mousemove', onPinActivateMouseMove);
+    document.removeEventListener('mouseup', onPinActivateMouseup);
+  };
+
+  document.addEventListener('mousemove', onPinActivateMouseMove);
+  document.addEventListener('mouseup', onPinActivateMouseup);
+
 };
 
 
@@ -279,7 +319,7 @@ var placeholderAddress = document.querySelector('#address');
 placeholderAddress.setAttribute('placeholder', pinActivateCoordinates.x + ', ' + pinActivateCoordinates.y);
 
 //  навешиваем обработчик активации страницы
-pinActivate.addEventListener('mouseup', onPinActivateMouseup);
+pinActivate.addEventListener('mousedown', onPinActivateMouseDown);
 pinActivate.addEventListener('keydown', onPinActivateKeydown);
 
 var onCardKeydown = function (evt) {
@@ -292,7 +332,6 @@ var onCardKeydown = function (evt) {
 
 //  отрисовка объявлений активной страницы
 var renderPage = function (listAdvert) {
-  pinActivate.removeEventListener('mouseup', onPinActivateMouseup);
   pinActivate.removeEventListener('keydown', onPinActivateKeydown);
   //  ищем шаблон и вставляем пины на карту
   var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
