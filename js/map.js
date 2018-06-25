@@ -18,6 +18,12 @@ var PRICE_TYPE = {
   house: 5000,
   bungalo: 0
 };
+var EXTREM_PIN_CORDS = {
+  minY: 130,
+  maxY: 630,
+  minX: 0,
+  maxX: 1200
+};
 var ROOM_CAPACITY = {
   '1': [1],
   '2': [1, 2],
@@ -275,13 +281,12 @@ var onPinActivateMouseDown = function (evt) {
       y: pinActivate.offsetTop - shift.y
     };
 
-    if (currentCoordinats.y >= 0 && currentCoordinats.y + pinActivate.offsetHeight + HEIGHT_PIN_POINTER <= mapPins.offsetHeight) {
+    if (currentCoordinats.y >= EXTREM_PIN_CORDS.minY - (pinActivate.offsetHeight + HEIGHT_PIN_POINTER) && currentCoordinats.y <= EXTREM_PIN_CORDS.maxY - (pinActivate.offsetHeight + HEIGHT_PIN_POINTER)) {
       pinActivate.style.top = (pinActivate.offsetTop - shift.y) + 'px';
     }
-    if (currentCoordinats.x >= 0 && currentCoordinats.x + pinActivate.offsetWidth <= mapPins.offsetWidth) {
+    if (currentCoordinats.x >= EXTREM_PIN_CORDS.minX && currentCoordinats.x + pinActivate.offsetWidth <= EXTREM_PIN_CORDS.maxX) {
       pinActivate.style.left = (pinActivate.offsetLeft - shift.x) + 'px';
     }
-
     //  изменение координат онлайн
     var pinCoordinates = determinesCoordinatesBottom(pinActivate);
     inputAddress.value = pinCoordinates.x + ', ' + pinCoordinates.y;
