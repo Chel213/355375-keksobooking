@@ -50,6 +50,38 @@
     });
   };
 
+  //  перевод страницы в НЕ активный режим
+  window.map = {
+    disablesPage: function () {
+      var form = document.querySelector('.ad-form');
+      var mapPins = document.querySelectorAll('.map__pin');
+      var card = document.querySelector('.map__card');
+      var map = document.querySelector('.map');
+      var pinMain = document.querySelector('.map__pin--main');
+      var fieldsForm = form.querySelectorAll('fieldset');
+      mapPins.forEach(function (item) {
+        if (item.className === 'map__pin') {
+          item.remove();
+        }
+      });
+      if (card) {
+        card.remove();
+        document.removeEventListener('keydown', onCardKeydown);
+      }
+
+      window.pin.pinActivate.addEventListener('keydown', onPinActivateKeydown);
+      map.classList.add('map--faded');
+      form.classList.add('ad-form--disabled');
+
+      pinMain.style.left = '570px';
+      pinMain.style.top = '375px';
+
+      fieldsForm.forEach(function (item) {
+        item.setAttribute('disabled', true);
+      });
+    }
+  };
+
   //  переводим страницу в активный режим
   var activatePage = function () {
     var mapVisible = document.querySelector('.map');
@@ -68,10 +100,12 @@
     var pinActivate = document.querySelector('.map__pin--main');
     var pinCoordinates = window.pin.determinesCoordinatesBottom(pinActivate);
     inputAddress.value = pinCoordinates.x + ', ' + pinCoordinates.y;
-    inputAddress.setAttribute('disabled', true);
+    inputAddress.setAttribute('readonly', true);
 
     //   отрисовка страницы
-    renderPage(window.data.listAdverts);
+    window.backend.load(renderPage, window.backend.error);
+
+
   };
 
   var onPinActivateMouseDown = function (evt) {
@@ -115,7 +149,6 @@
 
     document.addEventListener('mousemove', onPinActivateMouseMove);
     document.addEventListener('mouseup', onPinActivateMouseup);
-
   };
 
   //  обработчик активации страницы по enter
