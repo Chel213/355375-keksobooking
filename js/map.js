@@ -12,10 +12,15 @@
   //  отрисовка объявлений активной страницы
   var renderPage = function (listAdvert) {
     window.pin.pinActivate.removeEventListener('keydown', onPinActivateKeydown);
-    //  ищем шаблон и вставляем пины на карту
-    var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+
+    //  если пины еще не отрисованы, ищем шаблон и вставляем пины на карту
+    var pins = document.querySelector('.map__pin:not(.map__pin--main');
     var mapPins = document.querySelector('.map__pins');
-    mapPins.appendChild(window.pin.createListPin(listAdvert, mapPinTemplate));
+    if (!pins) {
+      var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+
+      mapPins.appendChild(window.pin.createListPin(listAdvert, mapPinTemplate));
+    }
 
     //  ищем шаблон
     var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
@@ -36,6 +41,7 @@
         mapCard.remove();
       }
       mapVisible.insertBefore(window.createAd(listAdvert[pinOrder], mapCardTemplate), mapContainer);
+
       //  навешиваем обработчик на закрытие
       var card = mapVisible.querySelector('.map__card');
       var cardClose = card.querySelector('.popup__close');
@@ -104,8 +110,6 @@
 
     //   отрисовка страницы
     window.backend.load(renderPage, window.backend.error);
-
-
   };
 
   var onPinActivateMouseDown = function (evt) {
