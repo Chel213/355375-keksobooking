@@ -19,8 +19,26 @@
     priceCard.appendChild(textPrice);
 
     //  тип жилья
+    var selectsType = function (type) {
+      var displayTitle;
+      switch (type) {
+        case 'flat':
+          displayTitle = 'Квартира';
+          break;
+        case 'bungalo':
+          displayTitle = 'Бунгало';
+          break;
+        case 'house':
+          displayTitle = 'Дом';
+          break;
+        case 'palace':
+          displayTitle = 'Дворец';
+          break;
+      }
+      return displayTitle;
+    };
     var typeCard = popupAdvert.querySelector('.popup__type');
-    typeCard.textContent = window.data.selectsType(listAdvert.offer.type);
+    typeCard.textContent = selectsType(listAdvert.offer.type);
 
     //  количество комнат
     popupAdvert.querySelector('.popup__text--capacity').textContent = listAdvert.offer.rooms + ' комнаты для ' + listAdvert.offer.guests + ' гостей';

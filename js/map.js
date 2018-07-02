@@ -9,13 +9,25 @@
   };
   var KEY_CODE_ENTER = 13;
   var KEY_CODE_ESC = 27;
+
+  var pinMainDefault = document.querySelector('.map__pin--main');
+  var coordinatesPinDefault = {
+    x: pinMainDefault.style.left,
+    y: pinMainDefault.style.top
+  };
+
   //  отрисовка объявлений активной страницы
   var renderPage = function (listAdvert) {
     window.pin.pinActivate.removeEventListener('keydown', onPinActivateKeydown);
-    //  ищем шаблон и вставляем пины на карту
-    var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+
+    //  если пины еще не отрисованы, ищем шаблон и вставляем пины на карту
+    var pins = document.querySelector('.map__pin:not(.map__pin--main');
     var mapPins = document.querySelector('.map__pins');
-    mapPins.appendChild(window.pin.createListPin(listAdvert, mapPinTemplate));
+    if (!pins) {
+      var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+
+      mapPins.appendChild(window.pin.createListPin(listAdvert, mapPinTemplate));
+    }
 
     //  ищем шаблон
     var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
@@ -36,6 +48,7 @@
         mapCard.remove();
       }
       mapVisible.insertBefore(window.createAd(listAdvert[pinOrder], mapCardTemplate), mapContainer);
+
       //  навешиваем обработчик на закрытие
       var card = mapVisible.querySelector('.map__card');
       var cardClose = card.querySelector('.popup__close');
@@ -48,6 +61,38 @@
         document.addEventListener('keydown', onCardKeydown);
       }
     });
+  };
+
+  //  перевод страницы в НЕ активный режим
+  window.map = {
+    disablesPage: function () {
+      var form = document.querySelector('.ad-form');
+      var mapPins = document.querySelectorAll('.map__pin');
+      var card = document.querySelector('.map__card');
+      var map = document.querySelector('.map');
+      var pinMain = document.querySelector('.map__pin--main');
+      var fieldsForm = form.querySelectorAll('fieldset');
+      mapPins.forEach(function (item) {
+        if (item.className === 'map__pin') {
+          item.remove();
+        }
+      });
+      if (card) {
+        card.remove();
+        document.removeEventListener('keydown', onCardKeydown);
+      }
+
+      window.pin.pinActivate.addEventListener('keydown', onPinActivateKeydown);
+      map.classList.add('map--faded');
+      form.classList.add('ad-form--disabled');
+
+      pinMain.style.left = coordinatesPinDefault.x;
+      pinMain.style.top = coordinatesPinDefault.y;
+
+      fieldsForm.forEach(function (item) {
+        item.setAttribute('disabled', true);
+      });
+    }
   };
 
   //  переводим страницу в активный режим
@@ -68,10 +113,10 @@
     var pinActivate = document.querySelector('.map__pin--main');
     var pinCoordinates = window.pin.determinesCoordinatesBottom(pinActivate);
     inputAddress.value = pinCoordinates.x + ', ' + pinCoordinates.y;
-    inputAddress.setAttribute('disabled', true);
+    inputAddress.setAttribute('readonly', true);
 
     //   отрисовка страницы
-    renderPage(window.data.listAdverts);
+    window.backend.load(renderPage, window.backend.error);
   };
 
   var onPinActivateMouseDown = function (evt) {
@@ -115,7 +160,6 @@
 
     document.addEventListener('mousemove', onPinActivateMouseMove);
     document.addEventListener('mouseup', onPinActivateMouseup);
-
   };
 
   //  обработчик активации страницы по enter
