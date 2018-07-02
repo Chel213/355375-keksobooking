@@ -9,6 +9,13 @@
   };
   var KEY_CODE_ENTER = 13;
   var KEY_CODE_ESC = 27;
+
+  var pinMainDefault = document.querySelector('.map__pin--main');
+  var coordinatesPinDefault = {
+    x: pinMainDefault.style.left,
+    y: pinMainDefault.style.top
+  };
+
   //  отрисовка объявлений активной страницы
   var renderPage = function (listAdvert) {
     window.pin.pinActivate.removeEventListener('keydown', onPinActivateKeydown);
@@ -79,8 +86,8 @@
       map.classList.add('map--faded');
       form.classList.add('ad-form--disabled');
 
-      pinMain.style.left = '570px';
-      pinMain.style.top = '375px';
+      pinMain.style.left = coordinatesPinDefault.x;
+      pinMain.style.top = coordinatesPinDefault.y;
 
       fieldsForm.forEach(function (item) {
         item.setAttribute('disabled', true);
