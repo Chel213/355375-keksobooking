@@ -14,6 +14,7 @@
     '3': [1, 2, 3],
     '100': [0]
   };
+  var KEY_CODE_ESC = 27;
   var adForm = document.querySelector('.ad-form');
   var adType = adForm.querySelector('#type');
   var adPrice = adForm.querySelector('#price');
@@ -80,7 +81,7 @@
         success.classList.add('hidden');
       });
       document.addEventListener('keydown', function (keyEvt) {
-        if (keyEvt.keyCode === 27) {
+        if (keyEvt.keyCode === KEY_CODE_ESC) {
           success.classList.add('hidden');
         }
       });
