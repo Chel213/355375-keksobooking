@@ -16,84 +16,38 @@
     y: pinMainDefault.style.top
   };
 
-  //  отрисовка объявлений активной страницы
-  var renderPage = function (listAdvert) {
-    window.pin.pinActivate.removeEventListener('keydown', onPinActivateKeydown);
 
-    //  если пины еще не отрисованы, ищем шаблон и вставляем пины на карту
-    var pins = document.querySelector('.map__pin:not(.map__pin--main');
-    var mapPins = document.querySelector('.map__pins');
-    if (!pins) {
-      var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+  //  перевод страницы в НЕ активный режим
 
-      mapPins.appendChild(window.pin.createListPin(listAdvert, mapPinTemplate));
+  var disablesPage = function () {
+    var form = document.querySelector('.ad-form');
+    var mapPins = document.querySelectorAll('.map__pin');
+    var card = document.querySelector('.map__card');
+    var map = document.querySelector('.map');
+    var pinMain = document.querySelector('.map__pin--main');
+    var fieldsForm = form.querySelectorAll('fieldset');
+    mapPins.forEach(function (item) {
+      if (item.className === 'map__pin') {
+        item.remove();
+      }
+    });
+    if (card) {
+      card.remove();
+      document.removeEventListener('keydown', onCardKeydown);
     }
 
-    //  ищем шаблон
-    var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
-    var mapVisible = document.querySelector('.map');
-    var mapContainer = mapVisible.querySelector('.map__filters-container');
+    window.pin.pinActivate.addEventListener('keydown', onPinActivateKeydown);
+    map.classList.add('map--faded');
+    form.classList.add('ad-form--disabled');
 
-    mapPins.addEventListener('click', function (evt) {
-      var pin = evt.target;
-      while (!pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main') && pin !== evt.currentTarget) {
-        pin = pin.parentNode;
-      }
-      if (pin.className !== 'map__pin') {
-        return;
-      }
-      var pinOrder = pin.dataset.order;
-      var mapCard = mapVisible.querySelector('.map__card');
-      if (mapCard) {
-        mapCard.remove();
-      }
-      mapVisible.insertBefore(window.createAd(listAdvert[pinOrder], mapCardTemplate), mapContainer);
+    pinMain.style.left = coordinatesPinDefault.x;
+    pinMain.style.top = coordinatesPinDefault.y;
 
-      //  навешиваем обработчик на закрытие
-      var card = mapVisible.querySelector('.map__card');
-      var cardClose = card.querySelector('.popup__close');
-      if (cardClose) {
-        cardClose.addEventListener('click', function () {
-          card.remove();
-        });
-      }
-      if (card) {
-        document.addEventListener('keydown', onCardKeydown);
-      }
+    fieldsForm.forEach(function (item) {
+      item.setAttribute('disabled', true);
     });
   };
 
-  //  перевод страницы в НЕ активный режим
-  window.map = {
-    disablesPage: function () {
-      var form = document.querySelector('.ad-form');
-      var mapPins = document.querySelectorAll('.map__pin');
-      var card = document.querySelector('.map__card');
-      var map = document.querySelector('.map');
-      var pinMain = document.querySelector('.map__pin--main');
-      var fieldsForm = form.querySelectorAll('fieldset');
-      mapPins.forEach(function (item) {
-        if (item.className === 'map__pin') {
-          item.remove();
-        }
-      });
-      if (card) {
-        card.remove();
-        document.removeEventListener('keydown', onCardKeydown);
-      }
-
-      window.pin.pinActivate.addEventListener('keydown', onPinActivateKeydown);
-      map.classList.add('map--faded');
-      form.classList.add('ad-form--disabled');
-
-      pinMain.style.left = coordinatesPinDefault.x;
-      pinMain.style.top = coordinatesPinDefault.y;
-
-      fieldsForm.forEach(function (item) {
-        item.setAttribute('disabled', true);
-      });
-    }
-  };
 
   //  переводим страницу в активный режим
   var activatePage = function () {
@@ -116,7 +70,7 @@
     inputAddress.setAttribute('readonly', true);
 
     //   отрисовка страницы
-    window.backend.load(renderPage, window.backend.error);
+    window.backend.load(window.renderMap.renderPage, window.backend.error);
   };
 
   var onPinActivateMouseDown = function (evt) {
@@ -184,4 +138,10 @@
   //  навешиваем обработчик активации страницы
   window.pin.pinActivate.addEventListener('mousedown', onPinActivateMouseDown);
   window.pin.pinActivate.addEventListener('keydown', onPinActivateKeydown);
+
+  window.map = {
+    disablesPage: disablesPage,
+    onCardKeydown: onCardKeydown,
+    onPinActivateKeydown: onPinActivateKeydown
+  };
 })();
