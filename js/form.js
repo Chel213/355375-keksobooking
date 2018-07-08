@@ -24,7 +24,7 @@
   var adRoomNumber = adForm.querySelector('#room_number');
   var adCapacity = adForm.querySelector('#capacity');
 
-  var synchronizationForm = function (formIn, formTo) {
+  var synchronizesForm = function (formIn, formTo) {
     var timeFrom = formIn.value;
     for (var i = 0; i < formTo.options.length; i++) {
       var timeTo = formTo.options[i].value;
@@ -46,10 +46,10 @@
 
   adFormTime.addEventListener('change', function (evt) {
     if (evt.target.name === 'timein') {
-      synchronizationForm(adTimeIn, adTimeOut);
+      synchronizesForm(adTimeIn, adTimeOut);
     }
     if (evt.target.name === 'timeout') {
-      synchronizationForm(adTimeOut, adTimeIn);
+      synchronizesForm(adTimeOut, adTimeIn);
     }
   });
 
@@ -68,8 +68,8 @@
     }
   });
 
-
   var success = document.querySelector('.success');
+  var formFilter = document.querySelector('.map__filters');
   var form = document.querySelector('.ad-form');
   //  перевод в неактивный режим
 
@@ -86,6 +86,7 @@
         }
       });
       form.reset();
+      formFilter.reset();
 
     },
     window.backend.error
