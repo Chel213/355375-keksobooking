@@ -6,9 +6,12 @@
   });
 
   var PRICES = {
-    LOW: 10000,
-    MIDDLE: 50000,
-    HIGH: 50000
+    LOW_MIN: 0,
+    LOW_MAX: 10000,
+    MIDDLE_MIN: 10000,
+    MIDDLE_MAX: 50000,
+    HIGH_MIN: 50000,
+    HIGH_MAX: Infinity
   };
 
   var filter = {
@@ -16,12 +19,12 @@
     price: 'any',
     rooms: 'any',
     guests: 'any',
-    wifi: false,
-    dishwasher: false,
-    parking: false,
-    washer: false,
-    elevator: false,
-    conditioner: false
+    thereIsWifi: false,
+    thereIsDishwasher: false,
+    thereIsParking: false,
+    thereIsWasher: false,
+    thereIsElevator: false,
+    thereIsConditioner: false
   };
 
   window.timerIdRender = null;
@@ -47,37 +50,26 @@
       filter.guests = evt.target.value;
     }
     if (evt.target.id === 'filter-wifi') {
-      filter.wifi = evt.target.checked;
+      filter.thereIsWifi = evt.target.checked;
     }
     if (evt.target.id === 'filter-dishwasher') {
-      filter.dishwasher = evt.target.checked;
+      filter.thereIsDishwasher = evt.target.checked;
     }
     if (evt.target.id === 'filter-parking') {
-      filter.parking = evt.target.checked;
+      filter.thereIsParking = evt.target.checked;
     }
     if (evt.target.id === 'filter-washer') {
-      filter.washer = evt.target.checked;
+      filter.thereIsWasher = evt.target.checked;
     }
     if (evt.target.id === 'filter-elevator') {
-      filter.elevator = evt.target.checked;
+      filter.thereIsElevator = evt.target.checked;
     }
     if (evt.target.id === 'filter-conditioner') {
-      filter.conditioner = evt.target.checked;
+      filter.thereIsConditioner = evt.target.checked;
     }
     return filter;
   };
 
-  var sortsAdverts = function (data) {
-    var copyAdverts = data.filter(function (element) {
-      return element.rank > 0;
-    });
-    var compareRank = function (advertA, advertB) {
-      return advertB.rank - advertA.rank;
-    };
-    copyAdverts.sort(compareRank);
-    copyAdverts.splice(5);
-    return copyAdverts;
-  };
 
   var formFilter = document.querySelector('.map__filters');
 
@@ -88,51 +80,68 @@
     }
     var stateFilter = determinesStateFilter(evt);
 
+    var similarAdverts = [];
+    var matchesFilterType;
+    var matchesFilterPrice;
+    var matchesFilterRooms;
+    var matchesFilterGuests;
+
     adverts.forEach(function (item) {
-      item.rank = 0;
-      if (item.offer.type === stateFilter.type) {
-        item.rank += 1;
-      }
-      if (item.offer.price <= PRICES.LOW && stateFilter.price === 'low') {
-        item.rank += 1;
-      }
-      if (item.offer.price > PRICES.LOW && item.offer.price <= PRICES.MIDDLE && stateFilter.price === 'middle') {
-        item.rank += 1;
-      }
-      if (item.offer.price > PRICES.HIGH && stateFilter.price === 'high') {
-        item.rank += 1;
-      }
-      if (item.offer.rooms === +stateFilter.rooms) {
-        item.rank += 1;
-      }
-      if (item.offer.guests === +stateFilter.guests) {
-        item.rank += 1;
+      var priceMin;
+      var priceMax;
+      switch (stateFilter.price) {
+        case 'low':
+          priceMin = PRICES.LOW_MIN;
+          priceMax = PRICES.LOW_MAX;
+          break;
+        case 'middle':
+          priceMin = PRICES.MIDDLE_MIN;
+          priceMax = PRICES.MIDDLE_MAX;
+          break;
+        case 'high':
+          priceMin = PRICES.HIGH_MIN;
+          priceMax = PRICES.HIGH_MAX;
+          break;
       }
 
-      item.offer.features.forEach(function (features) {
-        if (features === 'wifi' && stateFilter.wifi) {
-          item.rank += 1;
+      matchesFilterType = (item.offer.type === stateFilter.type) || (stateFilter.type === 'any');
+      matchesFilterPrice = (priceMin <= item.offer.price && item.offer.price <= priceMax) || (stateFilter.price === 'any');
+      matchesFilterRooms = (item.offer.rooms === +stateFilter.rooms) || (stateFilter.rooms === 'any');
+      matchesFilterGuests = (item.offer.guests === +stateFilter.guests) || (stateFilter.guests === 'any');
+
+      var matchesFilterWifi = false;
+      var matchesFilterDishwasher = false;
+      var matchesFilterParking = false;
+      var matchesFilterWasher = false;
+      var matchesFilterElevator = false;
+      var matchesFilterConditioner = false;
+
+      item.offer.features.forEach(function (featuresItem) {
+        if (featuresItem === 'wifi' && stateFilter.thereIsWifi) {
+          matchesFilterWifi = true;
         }
-        if (features === 'dishwasher' && stateFilter.dishwasher) {
-          item.rank += 1;
+        if (featuresItem === 'dishwasher' && stateFilter.dishwasher) {
+          matchesFilterDishwasher = true;
         }
-        if (features === 'parking' && stateFilter.parking) {
-          item.rank += 1;
+        if (featuresItem === 'parking' && stateFilter.parking) {
+          matchesFilterParking = true;
         }
-        if (features === 'washer' && stateFilter.washer) {
-          item.rank += 1;
+        if (featuresItem === 'washer' && stateFilter.washer) {
+          matchesFilterWasher = true;
         }
-        if (features === 'elevator' && stateFilter.elevator) {
-          item.rank += 1;
+        if (featuresItem === 'elevator' && stateFilter.elevator) {
+          matchesFilterElevator = true;
         }
-        if (features === 'conditioner' && stateFilter.conditioner) {
-          item.rank += 1;
+        if (featuresItem === 'conditioner' && stateFilter.conditioner) {
+          matchesFilterConditioner = true;
         }
+
       });
-    });
 
-    var advertsDefolt = adverts.slice();
-    var listAdverts = sortsAdverts(adverts);
+      if (matchesFilterType && matchesFilterRooms && matchesFilterPrice && matchesFilterGuests && (matchesFilterWifi || !stateFilter.thereIsWifi) && (matchesFilterDishwasher || !stateFilter.dishwasher) && (matchesFilterParking || !stateFilter.parking) && (matchesFilterWasher || !stateFilter.washer) && (matchesFilterElevator || !stateFilter.elevator) && (matchesFilterConditioner || !stateFilter.conditioner)) {
+        similarAdverts.push(item);
+      }
+    });
 
     var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main');
     mapPins.forEach(function (element) {
@@ -141,12 +150,7 @@
 
     window.renderMap.mapPins.removeEventListener('click', window.renderMap.onMapPinsClick);
 
-    if (stateFilter.type === 'any' && stateFilter.price === 'any' && stateFilter.rooms === 'any' && stateFilter.guests === 'any' && !stateFilter.wifi && !stateFilter.dishwasher && !stateFilter.parking && !stateFilter.washer && !stateFilter.elevator && !stateFilter.conditioner) {
-      updatePins(300, advertsDefolt);
-    } else {
-      updatePins(300, listAdverts);
-    }
+    updatePins(300, similarAdverts);
   });
 })();
-
 
