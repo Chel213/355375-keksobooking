@@ -120,25 +120,25 @@
         if (featuresItem === 'wifi' && stateFilter.thereIsWifi) {
           matchesFilterWifi = true;
         }
-        if (featuresItem === 'dishwasher' && stateFilter.dishwasher) {
+        if (featuresItem === 'dishwasher' && stateFilter.thereIsDishwasher) {
           matchesFilterDishwasher = true;
         }
-        if (featuresItem === 'parking' && stateFilter.parking) {
+        if (featuresItem === 'parking' && stateFilter.thereIsParking) {
           matchesFilterParking = true;
         }
-        if (featuresItem === 'washer' && stateFilter.washer) {
+        if (featuresItem === 'washer' && stateFilter.thereIsWasher) {
           matchesFilterWasher = true;
         }
-        if (featuresItem === 'elevator' && stateFilter.elevator) {
+        if (featuresItem === 'elevator' && stateFilter.thereIsElevator) {
           matchesFilterElevator = true;
         }
-        if (featuresItem === 'conditioner' && stateFilter.conditioner) {
+        if (featuresItem === 'conditioner' && stateFilter.thereIsConditioner) {
           matchesFilterConditioner = true;
         }
 
       });
 
-      if (matchesFilterType && matchesFilterRooms && matchesFilterPrice && matchesFilterGuests && (matchesFilterWifi || !stateFilter.thereIsWifi) && (matchesFilterDishwasher || !stateFilter.dishwasher) && (matchesFilterParking || !stateFilter.parking) && (matchesFilterWasher || !stateFilter.washer) && (matchesFilterElevator || !stateFilter.elevator) && (matchesFilterConditioner || !stateFilter.conditioner)) {
+      if (matchesFilterType && matchesFilterRooms && matchesFilterPrice && matchesFilterGuests && (matchesFilterWifi || !stateFilter.thereIsWifi) && (matchesFilterDishwasher || !stateFilter.thereIsDishwasher) && (matchesFilterParking || !stateFilter.thereIsParking) && (matchesFilterWasher || !stateFilter.thereIsWasher) && (matchesFilterElevator || !stateFilter.thereIsElevator) && (matchesFilterConditioner || !stateFilter.thereIsConditioner)) {
         similarAdverts.push(item);
       }
     });
