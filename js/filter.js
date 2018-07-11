@@ -26,9 +26,16 @@
   var filterElevator = formFilter.querySelector('#filter-elevator');
   var filterConditioner = formFilter.querySelector('#filter-conditioner');
 
-  //  функция определения состояние фильтра
-  var determinesStateFilter = function () {
-    var filter = {
+  //  обработчик по change
+  formFilter.addEventListener('change', function () {
+
+    //  проверяем открыто ли обьявление, и удаляем его
+    var card = document.querySelector('.map__card');
+    if (card) {
+      card.remove();
+    }
+    //  определяем состояние фильтра после change
+    var stateFilter = {
       type: housingType.value,
       price: housingPrice.value,
       rooms: housingRooms.value,
@@ -40,20 +47,6 @@
       thereIsElevator: filterElevator.checked,
       thereIsConditioner: filterConditioner.checked
     };
-    return filter;
-  };
-
-  //  обработчик по change
-  formFilter.addEventListener('change', function () {
-
-    //  проверяем открыто ли обьявление, и удаляем его
-    var card = document.querySelector('.map__card');
-    if (card) {
-      card.remove();
-    }
-    //  определяем состояние фильтра после change
-    var stateFilter = determinesStateFilter();
-
     //  создаем массив, для похожих объявлений
     var similarAdverts = [];
 
