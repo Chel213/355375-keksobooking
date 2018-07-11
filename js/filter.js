@@ -14,79 +14,51 @@
     HIGH_MAX: Infinity
   };
 
-  var filter = {
-    type: 'any',
-    price: 'any',
-    rooms: 'any',
-    guests: 'any',
-    thereIsWifi: false,
-    thereIsDishwasher: false,
-    thereIsParking: false,
-    thereIsWasher: false,
-    thereIsElevator: false,
-    thereIsConditioner: false
-  };
+  var formFilter = document.querySelector('.map__filters');
+  var housingType = formFilter.querySelector('#housing-type');
+  var housingPrice = formFilter.querySelector('#housing-price');
+  var housingRooms = formFilter.querySelector('#housing-rooms');
+  var housingGuests = formFilter.querySelector('#housing-guests');
+  var filterWifi = formFilter.querySelector('#filter-wifi');
+  var filterDishwasher = formFilter.querySelector('#filter-dishwasher');
+  var filterParking = formFilter.querySelector('#filter-parking');
+  var filterWasher = formFilter.querySelector('#filter-washer');
+  var filterElevator = formFilter.querySelector('#filter-elevator');
+  var filterConditioner = formFilter.querySelector('#filter-conditioner');
 
-  window.timerIdRender = null;
-  var updatePins = function (time, list) {
-    if (window.timerIdRender) {
-      clearTimeout(window.timerIdRender);
-    }
-    window.timerIdRender = setTimeout(window.renderMap.renderPage, time, list);
-  };
-
-  var determinesStateFilter = function (evt) {
-
-    if (evt.target.name === 'housing-type') {
-      filter.type = evt.target.value;
-    }
-    if (evt.target.name === 'housing-price') {
-      filter.price = evt.target.value;
-    }
-    if (evt.target.name === 'housing-rooms') {
-      filter.rooms = evt.target.value;
-    }
-    if (evt.target.name === 'housing-guests') {
-      filter.guests = evt.target.value;
-    }
-    if (evt.target.id === 'filter-wifi') {
-      filter.thereIsWifi = evt.target.checked;
-    }
-    if (evt.target.id === 'filter-dishwasher') {
-      filter.thereIsDishwasher = evt.target.checked;
-    }
-    if (evt.target.id === 'filter-parking') {
-      filter.thereIsParking = evt.target.checked;
-    }
-    if (evt.target.id === 'filter-washer') {
-      filter.thereIsWasher = evt.target.checked;
-    }
-    if (evt.target.id === 'filter-elevator') {
-      filter.thereIsElevator = evt.target.checked;
-    }
-    if (evt.target.id === 'filter-conditioner') {
-      filter.thereIsConditioner = evt.target.checked;
-    }
+  //  функция определения состояние фильтра
+  var determinesStateFilter = function () {
+    var filter = {
+      type: housingType.value,
+      price: housingPrice.value,
+      rooms: housingRooms.value,
+      guests: housingGuests.value,
+      thereIsWifi: filterWifi.checked,
+      thereIsDishwasher: filterDishwasher.checked,
+      thereIsParking: filterParking.checked,
+      thereIsWasher: filterWasher.checked,
+      thereIsElevator: filterElevator.checked,
+      thereIsConditioner: filterConditioner.checked
+    };
     return filter;
   };
 
+  //  обработчик по change
+  formFilter.addEventListener('change', function () {
 
-  var formFilter = document.querySelector('.map__filters');
-
-  formFilter.addEventListener('change', function (evt) {
+    //  проверяем открыто ли обьявление, и удаляем его
     var card = document.querySelector('.map__card');
     if (card) {
       card.remove();
     }
-    var stateFilter = determinesStateFilter(evt);
+    //  определяем состояние фильтра после change
+    var stateFilter = determinesStateFilter();
 
+    //  создаем массив, для похожих объявлений
     var similarAdverts = [];
-    var matchesFilterType;
-    var matchesFilterPrice;
-    var matchesFilterRooms;
-    var matchesFilterGuests;
 
     adverts.forEach(function (item) {
+
       var priceMin;
       var priceMax;
       switch (stateFilter.price) {
@@ -104,45 +76,27 @@
           break;
       }
 
-      matchesFilterType = (item.offer.type === stateFilter.type) || (stateFilter.type === 'any');
-      matchesFilterPrice = (priceMin <= item.offer.price && item.offer.price <= priceMax) || (stateFilter.price === 'any');
-      matchesFilterRooms = (item.offer.rooms === +stateFilter.rooms) || (stateFilter.rooms === 'any');
-      matchesFilterGuests = (item.offer.guests === +stateFilter.guests) || (stateFilter.guests === 'any');
+      //  записываем соответствие фильтру по параметрам
+      var matchesFilter = {};
+      //  проверка по соответствию фильтру, либо при значении "любой"
+      matchesFilter.type = (item.offer.type === stateFilter.type) || (stateFilter.type === 'any');
+      matchesFilter.price = (priceMin <= item.offer.price && item.offer.price <= priceMax) || (stateFilter.price === 'any');
+      matchesFilter.rooms = (item.offer.rooms === +stateFilter.rooms) || (stateFilter.rooms === 'any');
+      matchesFilter.guests = (item.offer.guests === +stateFilter.guests) || (stateFilter.guests === 'any');
 
-      var matchesFilterWifi = false;
-      var matchesFilterDishwasher = false;
-      var matchesFilterParking = false;
-      var matchesFilterWasher = false;
-      var matchesFilterElevator = false;
-      var matchesFilterConditioner = false;
+      matchesFilter.wifi = (item.offer.features.indexOf('wifi') >= 0) && stateFilter.thereIsWifi || !stateFilter.thereIsWifi;
+      matchesFilter.dishwasher = (item.offer.features.indexOf('dishwasher') >= 0) && stateFilter.thereIsDishwasher || !stateFilter.thereIsDishwasher;
+      matchesFilter.parking = (item.offer.features.indexOf('parking') >= 0) && stateFilter.thereIsParking || !stateFilter.thereIsParking;
+      matchesFilter.washer = (item.offer.features.indexOf('washer') >= 0) && stateFilter.thereIsWasher || !stateFilter.thereIsWasher;
+      matchesFilter.elevator = (item.offer.features.indexOf('elevator') >= 0) && stateFilter.thereIsElevator || !stateFilter.thereIsElevator;
+      matchesFilter.conditioner = (item.offer.features.indexOf('conditioner') >= 0) && stateFilter.thereIsConditioner || !stateFilter.thereIsConditioner;
 
-      item.offer.features.forEach(function (featuresItem) {
-        if (featuresItem === 'wifi' && stateFilter.thereIsWifi) {
-          matchesFilterWifi = true;
-        }
-        if (featuresItem === 'dishwasher' && stateFilter.thereIsDishwasher) {
-          matchesFilterDishwasher = true;
-        }
-        if (featuresItem === 'parking' && stateFilter.thereIsParking) {
-          matchesFilterParking = true;
-        }
-        if (featuresItem === 'washer' && stateFilter.thereIsWasher) {
-          matchesFilterWasher = true;
-        }
-        if (featuresItem === 'elevator' && stateFilter.thereIsElevator) {
-          matchesFilterElevator = true;
-        }
-        if (featuresItem === 'conditioner' && stateFilter.thereIsConditioner) {
-          matchesFilterConditioner = true;
-        }
-
-      });
-
-      if (matchesFilterType && matchesFilterRooms && matchesFilterPrice && matchesFilterGuests && (matchesFilterWifi || !stateFilter.thereIsWifi) && (matchesFilterDishwasher || !stateFilter.thereIsDishwasher) && (matchesFilterParking || !stateFilter.thereIsParking) && (matchesFilterWasher || !stateFilter.thereIsWasher) && (matchesFilterElevator || !stateFilter.thereIsElevator) && (matchesFilterConditioner || !stateFilter.thereIsConditioner)) {
+      //  в случае соответствия добавляем в массив похожих объявлений
+      if (matchesFilter.type && matchesFilter.rooms && matchesFilter.price && matchesFilter.guests && matchesFilter.wifi && matchesFilter.dishwasher && matchesFilter.parking && matchesFilter.washer && matchesFilter.elevator && matchesFilter.conditioner) {
         similarAdverts.push(item);
       }
     });
-
+    //  удаляем старые объявления
     var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main');
     mapPins.forEach(function (element) {
       element.remove();
@@ -150,7 +104,12 @@
 
     window.renderMap.mapPins.removeEventListener('click', window.renderMap.onMapPinsClick);
 
-    updatePins(300, similarAdverts);
+    //  отрисовываем новые из массива похожих объявлений
+    var renderPage = window.renderMap.renderPage;
+    var updatePins = window.debounce(renderPage);
+
+    updatePins(similarAdverts);
+
   });
 })();
 
