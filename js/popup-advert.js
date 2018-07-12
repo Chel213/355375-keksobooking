@@ -48,9 +48,31 @@
 
     //  список удобств
     var listFeatures = popupAdvert.querySelector('.popup__features');
-    for (var i = 0; i < listAdvert.offer.features.length; i++) {
-      var itemDel = listFeatures.querySelector('li:last-child');
-      listFeatures.removeChild(itemDel);
+
+    var wifiFeatures = listFeatures.querySelector('.popup__feature--wifi');
+    var dishwasherFeatures = listFeatures.querySelector('.popup__feature--dishwasher');
+    var parkingFeatures = listFeatures.querySelector('.popup__feature--parking');
+    var washerFeatures = listFeatures.querySelector('.popup__feature--washer');
+    var elevatorFeatures = listFeatures.querySelector('.popup__feature--elevator');
+    var conditionerFeatures = listFeatures.querySelector('.popup__feature--conditioner');
+
+    if (listAdvert.offer.features.indexOf('wifi') === -1) {
+      wifiFeatures.classList.add('visually-hidden');
+    }
+    if (listAdvert.offer.features.indexOf('dishwasher') === -1) {
+      dishwasherFeatures.classList.add('visually-hidden');
+    }
+    if (listAdvert.offer.features.indexOf('parking') === -1) {
+      parkingFeatures.classList.add('visually-hidden');
+    }
+    if (listAdvert.offer.features.indexOf('washer') === -1) {
+      washerFeatures.classList.add('visually-hidden');
+    }
+    if (listAdvert.offer.features.indexOf('elevator') === -1) {
+      elevatorFeatures.classList.add('visually-hidden');
+    }
+    if (listAdvert.offer.features.indexOf('conditioner') === -1) {
+      conditionerFeatures.classList.add('visually-hidden');
     }
 
     //  описание жилья
