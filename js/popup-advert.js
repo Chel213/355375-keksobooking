@@ -82,11 +82,11 @@
     var photosCard = popupAdvert.querySelector('.popup__photos');
     var photoCard = photosCard.removeChild(photosCard.querySelector('img'));
 
-    for (var j = 0; j < listAdvert.offer.photos.length; j++) {
+    listAdvert.offer.photos.forEach(function (item, i) {
       var itemPhotoCard = photoCard.cloneNode(true);
-      itemPhotoCard.src = listAdvert.offer.photos[j];
+      itemPhotoCard.src = listAdvert.offer.photos[i];
       photosCard.appendChild(itemPhotoCard);
-    }
+    });
 
     //  аватар
     popupAdvert.querySelector('.popup__avatar').src = listAdvert.author.avatar;

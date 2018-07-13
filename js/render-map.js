@@ -1,11 +1,13 @@
 'use strict';
 (function () {
 
+  var AMOUND_ADVERTS = 5;
+
   window.renderMap = {};
   window.renderMap.mapPins = document.querySelector('.map__pins');
   //  отрисовка объявлений активной страницы
   window.renderMap.renderPage = function (listAdvert) {
-    listAdvert.splice(5);
+    listAdvert.splice(AMOUND_ADVERTS);
     window.pin.pinActivate.removeEventListener('keydown', window.map.onPinActivateKeydown);
 
     //  если пины еще не отрисованы, ищем шаблон и вставляем пины на карту
@@ -52,7 +54,5 @@
 
     window.renderMap.mapPins.addEventListener('click', window.renderMap.onMapPinsClick);
   };
-
-
 })();
 

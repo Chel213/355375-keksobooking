@@ -26,6 +26,9 @@
   var filterElevator = formFilter.querySelector('#filter-elevator');
   var filterConditioner = formFilter.querySelector('#filter-conditioner');
 
+  var renderPage = window.renderMap.renderPage;
+  var updatePins = window.debounce(renderPage);
+
   //  обработчик по change
   formFilter.addEventListener('change', function () {
 
@@ -48,6 +51,7 @@
       thereIsConditioner: filterConditioner.checked
     };
     //  создаем массив, для похожих объявлений
+
     var similarAdverts = [];
 
     adverts.forEach(function (item) {
@@ -96,10 +100,6 @@
     });
 
     window.renderMap.mapPins.removeEventListener('click', window.renderMap.onMapPinsClick);
-
-    //  отрисовываем новые из массива похожих объявлений
-    var renderPage = window.renderMap.renderPage;
-    var updatePins = window.debounce(renderPage);
 
     updatePins(similarAdverts);
 
