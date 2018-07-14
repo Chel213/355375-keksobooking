@@ -23,6 +23,22 @@
   var adFormTime = adForm.querySelector('.ad-form__element--time');
   var adRoomNumber = adForm.querySelector('#room_number');
   var adCapacity = adForm.querySelector('#capacity');
+  var btnReset = adForm.querySelector('.ad-form__reset');
+
+
+  //  функция очистки загруженных изображений
+  var imageRemoves = function () {
+    //  удаляем фто объявлений при отпрвке
+    var imageAdvert = adForm.querySelectorAll('.ad-form__photo:not(:last-child)');
+    if (imageAdvert.length) {
+      imageAdvert.forEach(function (item) {
+        item.remove();
+      });
+    }
+    //  устанавливаем аватар по дефолту
+    var imageAvatar = adForm.querySelector('.ad-form-header__preview img');
+    imageAvatar.src = 'img/muffin-grey.svg';
+  };
 
   var synchronizesForm = function (formIn, formTo) {
     var timeFrom = formIn.value;
@@ -87,20 +103,15 @@
       });
       form.reset();
       formFilter.reset();
-      //  удаляем фто объявлений при отпрвке
-      var imageAdvert = form.querySelectorAll('.ad-form__photo:not(:last-child)');
-      if (imageAdvert.length) {
-        imageAdvert.forEach(function (item) {
-          item.remove();
-        });
-      }
-      //  устанавливаем аватар по дефолту
-      var imageAvatar = document.querySelector('.ad-form-header__preview img');
-      imageAvatar.src = 'img/muffin-grey.svg';
+      imageRemoves();
     },
     window.backend.error
     );
     evt.preventDefault();
+  });
+
+  btnReset.addEventListener('click', function () {
+    imageRemoves();
   });
 })();
 
