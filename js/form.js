@@ -87,7 +87,16 @@
       });
       form.reset();
       formFilter.reset();
-
+      //  удаляем фто объявлений при отпрвке
+      var imageAdvert = form.querySelectorAll('.ad-form__photo:not(:last-child)');
+      if (imageAdvert.length) {
+        imageAdvert.forEach(function (item) {
+          item.remove();
+        });
+      }
+      //  устанавливаем аватар по дефолту
+      var imageAvatar = document.querySelector('.ad-form-header__preview img');
+      imageAvatar.src = 'img/muffin-grey.svg';
     },
     window.backend.error
     );
