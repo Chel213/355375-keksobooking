@@ -82,9 +82,9 @@
     var photosCard = popupAdvert.querySelector('.popup__photos');
     var photoCard = photosCard.removeChild(photosCard.querySelector('img'));
 
-    listAdvert.offer.photos.forEach(function (item, i) {
+    listAdvert.offer.photos.forEach(function (item) {
       var itemPhotoCard = photoCard.cloneNode(true);
-      itemPhotoCard.src = listAdvert.offer.photos[i];
+      itemPhotoCard.src = item;
       photosCard.appendChild(itemPhotoCard);
     });
 

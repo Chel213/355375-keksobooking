@@ -27,14 +27,7 @@
 
 
   //  функция очистки загруженных изображений
-  var imageRemoves = function () {
-    //  удаляем фто объявлений при отпрвке
-    var imageAdvert = adForm.querySelectorAll('.ad-form__photo:not(:last-child)');
-    if (imageAdvert.length) {
-      imageAdvert.forEach(function (item) {
-        item.remove();
-      });
-    }
+  var clearForm = function () {
     //  устанавливаем аватар по дефолту
     var imageAvatar = adForm.querySelector('.ad-form-header__preview img');
     imageAvatar.src = 'img/muffin-grey.svg';
@@ -103,7 +96,7 @@
       });
       form.reset();
       formFilter.reset();
-      imageRemoves();
+      clearForm();
     },
     window.backend.error
     );
@@ -111,7 +104,7 @@
   });
 
   btnReset.addEventListener('click', function () {
-    imageRemoves();
+    clearForm();
   });
 })();
 
