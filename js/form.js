@@ -28,6 +28,12 @@
 
   //  функция очистки загруженных изображений
   var clearForm = function () {
+    var imageAdvert = adForm.querySelectorAll('.ad-form__photo:not(:last-child)');
+    if (imageAdvert.length) {
+      imageAdvert.forEach(function (item) {
+        item.remove();
+      });
+    }
     //  устанавливаем аватар по дефолту
     var imageAvatar = adForm.querySelector('.ad-form-header__preview img');
     imageAvatar.src = 'img/muffin-grey.svg';
