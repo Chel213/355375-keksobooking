@@ -3,16 +3,16 @@
   var DEBOUNCE_INTERVAL = 300; // ms
 
   window.debounce = function (fun) {
+    var lastTimeout = null;
 
     return function () {
       var args = arguments;
-      if (window.lastTimeout) {
-        window.clearTimeout(window.lastTimeout);
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
       }
-      window.lastTimeout = window.setTimeout(function () {
+      lastTimeout = window.setTimeout(function () {
         fun.apply(null, args);
       }, DEBOUNCE_INTERVAL);
     };
   };
 })();
-//  не понятно почему уходит из зоны видимости lastTimeout, я в слаке написал подробнее
