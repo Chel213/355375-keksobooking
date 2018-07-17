@@ -56,24 +56,29 @@
     var elevatorFeatures = listFeatures.querySelector('.popup__feature--elevator');
     var conditionerFeatures = listFeatures.querySelector('.popup__feature--conditioner');
 
-    if (listAdvert.offer.features.indexOf('wifi') === -1) {
-      wifiFeatures.classList.add('visually-hidden');
+    if (listAdvert.offer.features.length) {
+      listFeatures.classList.remove('visually-hidden');
+
+      if (listAdvert.offer.features.indexOf('wifi') === -1) {
+        wifiFeatures.classList.add('visually-hidden');
+      }
+      if (listAdvert.offer.features.indexOf('dishwasher') === -1) {
+        dishwasherFeatures.classList.add('visually-hidden');
+      }
+      if (listAdvert.offer.features.indexOf('parking') === -1) {
+        parkingFeatures.classList.add('visually-hidden');
+      }
+      if (listAdvert.offer.features.indexOf('washer') === -1) {
+        washerFeatures.classList.add('visually-hidden');
+      }
+      if (listAdvert.offer.features.indexOf('elevator') === -1) {
+        elevatorFeatures.classList.add('visually-hidden');
+      }
+      if (listAdvert.offer.features.indexOf('conditioner') === -1) {
+        conditionerFeatures.classList.add('visually-hidden');
+      }
     }
-    if (listAdvert.offer.features.indexOf('dishwasher') === -1) {
-      dishwasherFeatures.classList.add('visually-hidden');
-    }
-    if (listAdvert.offer.features.indexOf('parking') === -1) {
-      parkingFeatures.classList.add('visually-hidden');
-    }
-    if (listAdvert.offer.features.indexOf('washer') === -1) {
-      washerFeatures.classList.add('visually-hidden');
-    }
-    if (listAdvert.offer.features.indexOf('elevator') === -1) {
-      elevatorFeatures.classList.add('visually-hidden');
-    }
-    if (listAdvert.offer.features.indexOf('conditioner') === -1) {
-      conditionerFeatures.classList.add('visually-hidden');
-    }
+
 
     //  описание жилья
     popupAdvert.querySelector('.popup__description').textContent = listAdvert.offer.description;
@@ -82,11 +87,15 @@
     var photosCard = popupAdvert.querySelector('.popup__photos');
     var photoCard = photosCard.removeChild(photosCard.querySelector('img'));
 
-    listAdvert.offer.photos.forEach(function (item) {
-      var itemPhotoCard = photoCard.cloneNode(true);
-      itemPhotoCard.src = item;
-      photosCard.appendChild(itemPhotoCard);
-    });
+    if (listAdvert.offer.photos.length) {
+      photosCard.classList.remove('visually-hidden');
+      listAdvert.offer.photos.forEach(function (item) {
+        var itemPhotoCard = photoCard.cloneNode(true);
+        itemPhotoCard.src = item;
+        photosCard.appendChild(itemPhotoCard);
+      });
+    }
+
 
     //  аватар
     popupAdvert.querySelector('.popup__avatar').src = listAdvert.author.avatar;
