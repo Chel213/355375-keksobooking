@@ -25,15 +25,15 @@
   //  функция определения координат центра
   var determinesCoordinatesCenter = function (element) {
     var coordinates = {};
-    coordinates.x = element.offsetLeft + element.offsetWidth / 2;
-    coordinates.y = element.offsetTop + element.offsetHeight / 2;
+    coordinates.x = Math.round(element.offsetLeft + element.offsetWidth / 2);
+    coordinates.y = Math.round(element.offsetTop + element.offsetHeight / 2);
     return coordinates;
   };
 
   //  функция определения координат нижнего конца пина
   var determinesCoordinatesBottom = function (element) {
     var coordinates = {};
-    coordinates.x = element.offsetLeft + element.offsetWidth / 2;
+    coordinates.x = Math.round(element.offsetLeft + element.offsetWidth / 2);
     coordinates.y = element.offsetTop + HEIGHT_PIN_POINTER + element.offsetHeight;
     return coordinates;
   };
