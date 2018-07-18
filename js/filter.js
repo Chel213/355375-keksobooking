@@ -22,7 +22,7 @@
   var filterElevator = formFilter.querySelector('#filter-elevator');
   var filterConditioner = formFilter.querySelector('#filter-conditioner');
 
-  var renderPage = window.renderMap.renderPage;
+  var renderPage = window.renderMap.page;
   var updatePins = window.debounce(renderPage);
 
   //  обработчик по change
@@ -95,7 +95,7 @@
       element.remove();
     });
 
-    window.renderMap.mapPins.removeEventListener('click', window.renderMap.onMapPinsClick);
+    window.renderMap.pins.removeEventListener('click', window.renderMap.onMapPinsClick);
 
     updatePins(similarAdverts);
 

@@ -36,7 +36,7 @@
       document.removeEventListener('keydown', onCardKeydown);
     }
 
-    window.pin.pinActivate.addEventListener('keydown', onPinActivateKeydown);
+    window.pin.activate.addEventListener('keydown', onPinActivateKeydown);
     map.classList.add('map--faded');
     form.classList.add('ad-form--disabled');
 
@@ -70,7 +70,7 @@
     inputAddress.setAttribute('readonly', true);
 
     //   отрисовка страницы
-    window.backend.load(window.renderMap.renderPage, window.backend.error);
+    window.backend.load(window.renderMap.page, window.backend.error);
   };
 
   var onPinActivateMouseDown = function (evt) {
@@ -95,7 +95,7 @@
         x: pinActivate.offsetLeft - shift.x,
         y: pinActivate.offsetTop - shift.y
       };
-      if (currentCoordinats.y >= EXTREM_PIN_CORDS.minY - (pinActivate.offsetHeight + window.pin.pinPointer) && currentCoordinats.y <= EXTREM_PIN_CORDS.maxY - (pinActivate.offsetHeight + window.pin.pinPointer)) {
+      if (currentCoordinats.y >= EXTREM_PIN_CORDS.minY - (pinActivate.offsetHeight + window.pin.pointer) && currentCoordinats.y <= EXTREM_PIN_CORDS.maxY - (pinActivate.offsetHeight + window.pin.pointer)) {
         pinActivate.style.top = (pinActivate.offsetTop - shift.y) + 'px';
       }
       if (currentCoordinats.x >= EXTREM_PIN_CORDS.minX && currentCoordinats.x + pinActivate.offsetWidth <= EXTREM_PIN_CORDS.maxX) {
@@ -136,8 +136,8 @@
   });
 
   //  навешиваем обработчик активации страницы
-  window.pin.pinActivate.addEventListener('mousedown', onPinActivateMouseDown);
-  window.pin.pinActivate.addEventListener('keydown', onPinActivateKeydown);
+  window.pin.activate.addEventListener('mousedown', onPinActivateMouseDown);
+  window.pin.activate.addEventListener('keydown', onPinActivateKeydown);
 
   window.map = {
     disablesPage: disablesPage,

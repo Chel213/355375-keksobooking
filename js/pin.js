@@ -34,7 +34,7 @@
   var determinesCoordinatesBottom = function (element) {
     var coordinates = {};
     coordinates.x = Math.round(element.offsetLeft + element.offsetWidth / 2);
-    coordinates.y = element.offsetTop + HEIGHT_PIN_POINTER + element.offsetHeight;
+    coordinates.y = Math.round(element.offsetTop + HEIGHT_PIN_POINTER + element.offsetHeight);
     return coordinates;
   };
 
@@ -45,9 +45,9 @@
   placeholderAddress.setAttribute('placeholder', pinActivateCoordinates.x + ', ' + pinActivateCoordinates.y);
 
   window.pin = {
-    createListPin: createListPin,
+    createList: createListPin,
     determinesCoordinatesBottom: determinesCoordinatesBottom,
-    pinActivate: pinActivate,
-    pinPointer: HEIGHT_PIN_POINTER
+    activate: pinActivate,
+    pointer: HEIGHT_PIN_POINTER
   };
 })();

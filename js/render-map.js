@@ -4,11 +4,11 @@
   var AMOUND_ADVERTS = 5;
 
   window.renderMap = {};
-  window.renderMap.mapPins = document.querySelector('.map__pins');
+  window.renderMap.pins = document.querySelector('.map__pins');
   //  отрисовка объявлений активной страницы
-  window.renderMap.renderPage = function (listAdvert) {
+  window.renderMap.page = function (listAdvert) {
     listAdvert.splice(AMOUND_ADVERTS);
-    window.pin.pinActivate.removeEventListener('keydown', window.map.onPinActivateKeydown);
+    window.pin.activate.removeEventListener('keydown', window.map.onPinActivateKeydown);
 
     //  если пины еще не отрисованы, ищем шаблон и вставляем пины на карту
     var pins = document.querySelector('.map__pin:not(.map__pin--main');
@@ -16,7 +16,7 @@
     if (!pins) {
       var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-      window.renderMap.mapPins.appendChild(window.pin.createListPin(listAdvert, mapPinTemplate));
+      window.renderMap.pins.appendChild(window.pin.createList(listAdvert, mapPinTemplate));
     }
 
     //  ищем шаблон
@@ -52,7 +52,7 @@
       }
     };
 
-    window.renderMap.mapPins.addEventListener('click', window.renderMap.onMapPinsClick);
+    window.renderMap.pins.addEventListener('click', window.renderMap.onMapPinsClick);
   };
 })();
 
