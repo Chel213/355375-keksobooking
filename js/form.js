@@ -110,7 +110,10 @@
   });
 
   btnReset.addEventListener('click', function () {
+    form.reset();
+    formFilter.reset();
     clearForm();
+    window.map.disablesPage();
   });
 })();
 
