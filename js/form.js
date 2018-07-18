@@ -36,7 +36,7 @@
     }
     //  устанавливаем аватар по дефолту
     var imageAvatar = adForm.querySelector('.ad-form-header__preview img');
-    imageAvatar.src = 'img/muffin-grey.svg';
+    imageAvatar.setAttribute('src', 'img/muffin-grey.svg');
   };
 
   var synchronizesForm = function (formIn, formTo) {
@@ -54,7 +54,7 @@
 
   adType.addEventListener('change', function () {
     var type = adType.value;
-    adPrice.placeholder = PRICE_TYPE[type];
+    adPrice.setAttribute('placeholder', PRICE_TYPE[type]);
     adPrice.min = PRICE_TYPE[type];
   });
 
