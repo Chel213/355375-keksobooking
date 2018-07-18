@@ -3,22 +3,22 @@
 (function () {
   var HEIGHT_PIN_POINTER = 22;
   //  функция создания Pin
-  var createPinElement = function (itemListAdvert, templatePin) {
-    var pinElement = templatePin.cloneNode(true);
-    var imagePinElement = pinElement.querySelector('img');
-    pinElement.style = 'left: ' + (itemListAdvert.location.x + imagePinElement.width / 2) + 'px; top: ' + (itemListAdvert.location.y + imagePinElement.height) + 'px;';
-    imagePinElement.src = itemListAdvert.author.avatar;
-    imagePinElement.alt = itemListAdvert.offer.title;
-    return pinElement;
+  var createPin = function (itemListAdvert, templatePin) {
+    var pin = templatePin.cloneNode(true);
+    var imagePin = pin.querySelector('img');
+    pin.style = 'left: ' + (itemListAdvert.location.x + imagePin.width / 2) + 'px; top: ' + (itemListAdvert.location.y + imagePin.height) + 'px;';
+    imagePin.src = itemListAdvert.author.avatar;
+    imagePin.alt = itemListAdvert.offer.title;
+    return pin;
   };
 
   //  функция создания всех пинов
   var createListPin = function (listAdvert, templatePin) {
     var fragment = document.createDocumentFragment();
     listAdvert.forEach(function (item, i) {
-      var pinElement = createPinElement(item, templatePin);
-      pinElement.setAttribute('data-order', i);
-      fragment.appendChild(pinElement);
+      var pin = createPin(item, templatePin);
+      pin.setAttribute('data-order', i);
+      fragment.appendChild(pin);
     });
     return fragment;
   };
