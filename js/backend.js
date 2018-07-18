@@ -4,8 +4,9 @@
 
   var STATUS_OK = 200;
   var TIMEOUT = 5000;
+  window.backend = {};
 
-  var showError = function (message) {
+  window.backend.showError = function (message) {
     var map = document.querySelector('.map');
     var messageError = document.createElement('div');
     messageError.style.position = 'fixed';
@@ -22,7 +23,7 @@
   };
 
 
-  var load = function (onLoad, onError) {
+  window.backend.load = function (onLoad, onError) {
     var URL = 'https://js.dump.academy/keksobooking/data';
 
     var xhr = new XMLHttpRequest();
@@ -32,6 +33,7 @@
 
       if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
+        window.backend.data = xhr.response;
       } else {
         onError(xhr.status);
       }
@@ -48,7 +50,7 @@
     xhr.send();
   };
 
-  var save = function (data, onLoad, onError) {
+  window.backend.save = function (data, onLoad, onError) {
     var URL = 'https://js.dump.academy/keksobooking';
 
     var xhr = new XMLHttpRequest();
@@ -73,9 +75,4 @@
     xhr.send(data);
   };
 
-  window.backend = {
-    load: load,
-    save: save,
-    error: showError
-  };
 })();

@@ -1,9 +1,5 @@
 'use strict';
 (function () {
-  var adverts;
-  window.backend.load(function (data) {
-    adverts = data;
-  });
 
   var PRICES = {
     LOW_MIN: 0,
@@ -54,7 +50,7 @@
 
     var similarAdverts = [];
 
-    adverts.forEach(function (item) {
+    window.backend.data.forEach(function (item) {
 
       var priceMin;
       var priceMax;
