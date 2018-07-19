@@ -56,27 +56,20 @@
     var elevatorFeatures = listFeatures.querySelector('.popup__feature--elevator');
     var conditionerFeatures = listFeatures.querySelector('.popup__feature--conditioner');
 
+    var displayFeatures = function (featuresName, featuresIcon) {
+      if (listAdvert.offer.features.indexOf(featuresName) === -1) {
+        featuresIcon.classList.add('visually-hidden');
+      }
+    };
+
     if (listAdvert.offer.features.length) {
       listFeatures.classList.remove('visually-hidden');
-
-      if (listAdvert.offer.features.indexOf('wifi') === -1) {
-        wifiFeatures.classList.add('visually-hidden');
-      }
-      if (listAdvert.offer.features.indexOf('dishwasher') === -1) {
-        dishwasherFeatures.classList.add('visually-hidden');
-      }
-      if (listAdvert.offer.features.indexOf('parking') === -1) {
-        parkingFeatures.classList.add('visually-hidden');
-      }
-      if (listAdvert.offer.features.indexOf('washer') === -1) {
-        washerFeatures.classList.add('visually-hidden');
-      }
-      if (listAdvert.offer.features.indexOf('elevator') === -1) {
-        elevatorFeatures.classList.add('visually-hidden');
-      }
-      if (listAdvert.offer.features.indexOf('conditioner') === -1) {
-        conditionerFeatures.classList.add('visually-hidden');
-      }
+      displayFeatures('wifi', wifiFeatures);
+      displayFeatures('dishwasher', dishwasherFeatures);
+      displayFeatures('parking', parkingFeatures);
+      displayFeatures('washer', washerFeatures);
+      displayFeatures('elevator', elevatorFeatures);
+      displayFeatures('conditioner', conditionerFeatures);
     }
 
 

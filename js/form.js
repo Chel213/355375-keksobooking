@@ -14,7 +14,7 @@
     '3': [1, 2, 3],
     '100': [0]
   };
-  var KEY_CODE_ESC = 27;
+
   var adForm = document.querySelector('.ad-form');
   var adType = adForm.querySelector('#type');
   var adPrice = adForm.querySelector('#price');
@@ -93,7 +93,7 @@
   //  перевод в неактивный режим
 
   form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), function () {
+    window.backend.request(function () {
       messageSuccess.classList.remove('hidden');
       window.map.disablesPage();
       messageSuccess.addEventListener('click', function () {
@@ -106,7 +106,8 @@
       formFilter.reset();
       clearForm();
     },
-    window.backend.error
+    window.backend.showError,
+    new FormData(form)
     );
     evt.preventDefault();
   });

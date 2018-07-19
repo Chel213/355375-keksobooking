@@ -69,7 +69,7 @@
     inputAddress.setAttribute('readonly', true);
 
     //   отрисовка страницы
-    window.backend.load(window.renderMap.page, window.backend.error);
+    window.backend.request(window.renderMap.page, window.backend.showError);
   };
 
   var onPinActivateMouseDown = function (evt) {
