@@ -8,7 +8,6 @@
     maxX: 1200
   };
   var KEY_CODE_ENTER = 13;
-  var KEY_CODE_ESC = 27;
 
   var pinMainDefault = document.querySelector('.map__pin--main');
   var coordinatesPinDefault = {
@@ -122,12 +121,15 @@
       activatePage();
     }
   };
-  var onCardKeydown = function (evt) {
+
+  var closeCard = function () {
     var card = document.querySelector('.map__card');
-    if (evt.keyCode === KEY_CODE_ESC) {
-      card.remove();
-      document.removeEventListener('keydown', onCardKeydown);
-    }
+    card.remove();
+    document.removeEventListener('keydown', onCardKeydown);
+  };
+
+  var onCardKeydown = function (evt) {
+    window.keyboardEsc(evt, closeCard);
   };
   // делаем поля формы не активными
   var fieldForm = document.querySelectorAll('.ad-form fieldset');

@@ -83,22 +83,24 @@
     }
   });
 
-  var success = document.querySelector('.success');
+  var messageSuccess = document.querySelector('.success');
   var formFilter = document.querySelector('.map__filters');
   var form = document.querySelector('.ad-form');
+
+  var messageSuccessCloseEsc = function () {
+    messageSuccess.classList.add('hidden');
+  };
   //  перевод в неактивный режим
 
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
-      success.classList.remove('hidden');
+      messageSuccess.classList.remove('hidden');
       window.map.disablesPage();
-      success.addEventListener('click', function () {
-        success.classList.add('hidden');
+      messageSuccess.addEventListener('click', function () {
+        messageSuccess.classList.add('hidden');
       });
       document.addEventListener('keydown', function (keyEvt) {
-        if (keyEvt.keyCode === KEY_CODE_ESC) {
-          success.classList.add('hidden');
-        }
+        window.keyboardEsc(keyEvt, messageSuccessCloseEsc);
       });
       form.reset();
       formFilter.reset();
