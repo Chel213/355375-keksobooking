@@ -80,7 +80,7 @@
       card.remove();
     }
 
-    //точечно обновляем state, узнавая что произошло через evt
+    //  точечно обновляем state, узнавая что произошло через evt
     switch (evt.target) {
       case housingType:
         state.type = housingType.value;
