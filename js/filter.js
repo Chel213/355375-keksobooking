@@ -63,6 +63,10 @@
     features: []
   };
 
+  window.filterClear = function () {
+    state.features.splice(0, state.features.length);
+  };
+
   var filtersFeatures = function (feature) {
     if (feature.checked) {
       state.features.push(feature.value);

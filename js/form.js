@@ -104,6 +104,7 @@
       });
       form.reset();
       formFilter.reset();
+      window.filterClear();
       clearForm();
     },
     window.backend.showError,
@@ -116,6 +117,7 @@
     form.reset();
     formFilter.reset();
     clearForm();
+    window.filterClear();
     window.map.disablesPage();
   });
 })();
