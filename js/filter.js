@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var priceRange = {
+  var PriceRange = {
     low: [0, 10000],
     middle: [10000, 50000],
     high: [50000, Infinity],
@@ -25,7 +25,7 @@
 
   var filters = {
     price: function (offer, priceType) {
-      return offer.price >= priceRange[priceType][0] && offer.price < priceRange[priceType][1];
+      return offer.price >= PriceRange[priceType][0] && offer.price < PriceRange[priceType][1];
     },
     type: function (offer, type) {
       return type === 'any' || offer.type === type;
