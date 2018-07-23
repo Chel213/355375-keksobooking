@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var PriceRange = {
+  var priceRange = {
     low: [0, 10000],
     middle: [10000, 50000],
     high: [50000, Infinity],
@@ -23,9 +23,9 @@
   var updatePins = window.debounce(renderPage);
 
 
-  var FILTERS = {
+  var filters = {
     price: function (offer, priceType) {
-      return offer.price >= PriceRange[priceType][0] && offer.price < PriceRange[priceType][1];
+      return offer.price >= priceRange[priceType][0] && offer.price < priceRange[priceType][1];
     },
     type: function (offer, type) {
       return type === 'any' || offer.type === type;
@@ -48,11 +48,11 @@
   var filter = function (advert) {
     var offer = advert.offer;
 
-    return FILTERS.type(offer, state.type) &&
-      FILTERS.price(offer, state.price) &&
-      FILTERS.rooms(offer, state.rooms) &&
-      FILTERS.guests(offer, state.guests) &&
-      FILTERS.features(offer, state.features);
+    return filters.type(offer, state.type) &&
+      filters.price(offer, state.price) &&
+      filters.rooms(offer, state.rooms) &&
+      filters.guests(offer, state.guests) &&
+      filters.features(offer, state.features);
   };
 
   var state = {
@@ -114,7 +114,7 @@
         break;
     }
 
-    var similarAdverts = window.backend.data.filter(filter);
+    var similarAdverts = window.map.data.filter(filter);
 
     //  удаляем старые объявления
     var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main');

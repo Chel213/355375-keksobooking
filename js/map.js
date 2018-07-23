@@ -69,7 +69,16 @@
     inputAddress.setAttribute('readonly', true);
 
     //   отрисовка страницы
-    window.backend.request(window.renderMap.page, window.backend.showError);
+    if (!window.map.data) {
+      window.backend.request(function (data) {
+        window.map.data = data.slice();
+        window.renderMap.page(window.map.data);
+      },
+      window.backend.showError
+      );
+    } else {
+      window.renderMap.page(window.map.data);
+    }
   };
 
   var onPinActivateMouseDown = function (evt) {
@@ -106,6 +115,7 @@
     };
 
     var onPinActivateMouseup = function () {
+      window.renderMap.pins.removeEventListener('click', window.renderMap.onMapPinsClick);
       activatePage();
       document.removeEventListener('mousemove', onPinActivateMouseMove);
       document.removeEventListener('mouseup', onPinActivateMouseup);

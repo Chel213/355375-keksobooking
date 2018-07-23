@@ -6,8 +6,9 @@
   window.renderMap = {};
   window.renderMap.pins = document.querySelector('.map__pins');
   //  отрисовка объявлений активной страницы
-  window.renderMap.page = function (listAdvert) {
-    listAdvert.splice(AMOUND_ADVERTS);
+  window.renderMap.page = function (listAdverts) {
+    var adverts = listAdverts.slice();
+    adverts.splice(AMOUND_ADVERTS);
     window.pin.activate.removeEventListener('keydown', window.map.onPinActivateKeydown);
 
     //  если пины еще не отрисованы, ищем шаблон и вставляем пины на карту
@@ -16,7 +17,7 @@
     if (!pins) {
       var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-      window.renderMap.pins.appendChild(window.pin.createList(listAdvert, mapPinTemplate));
+      window.renderMap.pins.appendChild(window.pin.createList(adverts, mapPinTemplate));
     }
 
     //  ищем шаблон
@@ -37,7 +38,7 @@
       if (mapCard) {
         mapCard.remove();
       }
-      mapVisible.insertBefore(window.createAd(listAdvert[pinOrder], mapCardTemplate), mapContainer);
+      mapVisible.insertBefore(window.createAd(adverts[pinOrder], mapCardTemplate), mapContainer);
 
       //  навешиваем обработчик на закрытие
       var card = mapVisible.querySelector('.map__card');

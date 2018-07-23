@@ -32,7 +32,6 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
-        window.backend.data = xhr.response;
       } else {
         onError(xhr.status);
       }
