@@ -23,7 +23,7 @@
   var updatePins = window.debounce(renderPage);
 
 
-  var filters = {
+  var Filters = {
     price: function (offer, priceType) {
       return offer.price >= PriceRange[priceType][0] && offer.price < PriceRange[priceType][1];
     },
@@ -48,11 +48,11 @@
   var filter = function (advert) {
     var offer = advert.offer;
 
-    return filters.type(offer, state.type) &&
-      filters.price(offer, state.price) &&
-      filters.rooms(offer, state.rooms) &&
-      filters.guests(offer, state.guests) &&
-      filters.features(offer, state.features);
+    return Filters.type(offer, state.type) &&
+      Filters.price(offer, state.price) &&
+      Filters.rooms(offer, state.rooms) &&
+      Filters.guests(offer, state.guests) &&
+      Filters.features(offer, state.features);
   };
 
   var state = {
