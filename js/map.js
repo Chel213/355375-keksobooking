@@ -36,6 +36,8 @@
     }
 
     window.pin.activate.addEventListener('keydown', onPinActivateKeydown);
+    window.pin.activate.addEventListener('click', onPinActivateClick);
+
     map.classList.add('map--faded');
     form.classList.add('ad-form--disabled');
 
@@ -115,14 +117,18 @@
     };
 
     var onPinActivateMouseup = function () {
-      window.renderMap.pins.removeEventListener('click', window.renderMap.onMapPinsClick);
-      activatePage();
       document.removeEventListener('mousemove', onPinActivateMouseMove);
       document.removeEventListener('mouseup', onPinActivateMouseup);
     };
 
     document.addEventListener('mousemove', onPinActivateMouseMove);
     document.addEventListener('mouseup', onPinActivateMouseup);
+  };
+
+  //  обработчик активации по клику
+  var onPinActivateClick = function () {
+    activatePage();
+    window.pin.activate.removeEventListener('click', onPinActivateClick);
   };
 
   //  обработчик активации страницы по enter
@@ -152,6 +158,7 @@
   //  навешиваем обработчик активации страницы
   window.pin.activate.addEventListener('mousedown', onPinActivateMouseDown);
   window.pin.activate.addEventListener('keydown', onPinActivateKeydown);
+  window.pin.activate.addEventListener('click', onPinActivateClick);
 
   window.map = {
     disablesPage: disablesPage,
