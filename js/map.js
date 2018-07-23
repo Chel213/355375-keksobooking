@@ -134,8 +134,10 @@
 
   var closeCard = function () {
     var card = document.querySelector('.map__card');
-    card.remove();
-    document.removeEventListener('keydown', onCardKeydown);
+    if (card) {
+      card.remove();
+      document.removeEventListener('keydown', onCardKeydown);
+    }
   };
 
   var onCardKeydown = function (evt) {
