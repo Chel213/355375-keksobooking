@@ -99,6 +99,7 @@
       messageSuccess.addEventListener('click', function () {
         messageSuccess.classList.add('hidden');
       });
+      window.renderMap.pins.removeEventListener('click', window.renderMap.onMapPinsClick);
       document.addEventListener('keydown', function (keyEvt) {
         window.keyboardEsc(keyEvt, messageSuccessCloseEsc);
       });
@@ -119,6 +120,7 @@
     clearForm();
     window.filterClear();
     window.map.disablesPage();
+    window.renderMap.pins.removeEventListener('click', window.renderMap.onMapPinsClick);
   });
 })();
 
