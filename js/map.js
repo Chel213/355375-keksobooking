@@ -14,11 +14,12 @@
     x: pinMainDefault.style.left,
     y: pinMainDefault.style.top
   };
-
+  var activatePageStatus = false;
 
   //  перевод страницы в НЕ активный режим
 
   var disablesPage = function () {
+    activatePageStatus = false;
     var form = document.querySelector('.ad-form');
     var mapPins = document.querySelectorAll('.map__pin');
     var card = document.querySelector('.map__card');
@@ -36,7 +37,6 @@
     }
 
     window.pin.activate.addEventListener('keydown', onPinActivateKeydown);
-    window.pin.activate.addEventListener('click', onPinActivateClick);
 
     map.classList.add('map--faded');
     form.classList.add('ad-form--disabled');
@@ -49,9 +49,9 @@
     });
   };
 
-
   //  переводим страницу в активный режим
   var activatePage = function () {
+    activatePageStatus = true;
     var mapVisible = document.querySelector('.map');
     mapVisible.classList.remove('map--faded');
 
@@ -117,18 +117,15 @@
     };
 
     var onPinActivateMouseup = function () {
+      if (!activatePageStatus) {
+        activatePage();
+      }
       document.removeEventListener('mousemove', onPinActivateMouseMove);
       document.removeEventListener('mouseup', onPinActivateMouseup);
     };
 
     document.addEventListener('mousemove', onPinActivateMouseMove);
     document.addEventListener('mouseup', onPinActivateMouseup);
-  };
-
-  //  обработчик активации по клику
-  var onPinActivateClick = function () {
-    activatePage();
-    window.pin.activate.removeEventListener('click', onPinActivateClick);
   };
 
   //  обработчик активации страницы по enter
@@ -158,7 +155,6 @@
   //  навешиваем обработчик активации страницы
   window.pin.activate.addEventListener('mousedown', onPinActivateMouseDown);
   window.pin.activate.addEventListener('keydown', onPinActivateKeydown);
-  window.pin.activate.addEventListener('click', onPinActivateClick);
 
   window.map = {
     disablesPage: disablesPage,
